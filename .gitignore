@@ -1,0 +1,4 @@
+**/target
+**/nbproject/private
+**/nbproject/dist
+nb-configuration.xml
