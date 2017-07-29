@@ -25,7 +25,7 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath fi.niwic.dcf.ui.Main</exec.args>
+            <exec.args>-classpath %classpath fi.niwic.vbotti.Main test</exec.args>
             <exec.executable>java</exec.executable>
         </properties>
     </action>
@@ -36,4 +36,33 @@
             <goal>javadoc:javadoc</goal>
         </goals>
     </action>
+    <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath fi.niwic.vbotti.Main test</exec.args>
+                <exec.executable>java</exec.executable>
+                <jpda.listen>true</jpda.listen>
+            </properties>
+        </action>
+    <action>
+            <actionName>profile</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath fi.niwic.vbotti.Main test</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
 </actions>
