@@ -1,9 +1,10 @@
 ## Viikkoraportti 2
-- Käytetty aika n. 45 min
 
-Tein alustavan main metodin, joka käyttää vindiniumilta saatavan java klientin (https://github.com/bstempi/vindinium-client).
+30 min: Tein alustavan main metodin, joka käyttää vindiniumilta saatavan java klientin (https://github.com/bstempi/vindinium-client).
 
-1.5h: Implementaation alkunen
-Multi-player alpha-beta pruning: https://pdfs.semanticscholar.org/ec08/284de3ac57f72e3aa931881808c322be5edc.pdf
+30 min: Uusi määrittely perustuen alpha-beta algoritmiin
 
-2h: Pelimekaniikkaa
+4.5h: Implementaation alkunen & Pelimekaniikkaa
+Pelimekaniikan mallintaminseen vaikuttaa menevän aika paljon aikaa. Parsin pelikentän omaan tietorakenteeseen, josta saa helposti analysoitua pelitilanteen. Tarkoitus on, että siitä saisi myös helposit muokattua seuraavan siiron mukaisen pelitilanteen.
+
+Seuraavaksi jatkan pelimiekaniikalla, ja mahdollisesti itse alpha-beta algorimilla.

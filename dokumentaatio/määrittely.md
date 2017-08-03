@@ -1,14 +1,16 @@
 ## Määrittely
-Tarkoituksena olisi tehdä Javassa Vindinium botti 3 op laajuisena työnä. Botti perustuisi pääasiallisesti A* algoritmiin. Algoritmi käytettäisiin löytämmän lyhyimmän reitin ei pelaajan omistuksessa olevaan kultakaivokseen. Algoritmin polun painoja voisi säätää sitä mukaan, miten hyvä reitti on kyseessä. Esimerkiksi reitti jossa on vastustaja voisi olla painavampi, kun sellainen minkä polulla ei ole vastustajaa.
+Tarkoituksena olisi tehdä Javassa Vindinium botti 3 op laajuisena työnä.
 
-Lisänä voisi myös laatia tilakoneen, joka ohjaa botin toimintaa esim. kun se ei omista mitään kaivoja, tai kun se omistaa kaikki kaivot. Tiloja voisi myös olla perustuen botin elämäpisteisiin.
+Tarkoitus olisi tehdä alpha-beta algoritmiin perustuvan botin. Botti toimisi niin, että pelaajan vuoron alussa lähdetään analysoimaan kaikki mahdolliset siirrot puuna ja mihin tulokseen ne loppujen lopuksi johtaa. Tilanteen analysointi pitää ehkä lopettaa ennen kun päästään lopputilanteeseen, koska mahdollisia mutaatioita on viisi (liikumiset + paikalla pysyminen) per vuoro. Vuoroja voi olla muutamasta sadasta yli tuhanteen.
 
-A* algoritmia käytetään koska se on nopea tapa löytää reitti pisteiden välillä. Algoritmin painoilla voidaan myös säätää reittiä pelimekaniikan mukaan. Algoritmin syötteenä voisi olla parametrit jolla hienosäädetään reitti-valintaa, esim. minkä painoinen vastustajan läpi menevän reitti on.
+Joka pelitilanteen mutaatiossa arvioidaan botin pisteet vastaan parhaan toisen botin pisteitä. Tämän erotuksen perusteella olisi tarkoitus muodostaa "alpha" ja "beta" arvot, jotka rajaavat mitkä pelitilanteen haarat kannattaa lähteä kokeilemaan. Tämä tekee algoritmista branch-and-bound tyyppisen.
 
-Kenttä ylläpidetään jonkin sortin matriisina josta vierus-solmut selviävät nopeasti, ja A* algoritmin apuna käytetään todennäköisesti minimikekoa.
+Alpha-beta algoritmi perustuu min-max algoritmiin jolla analysoidaan pelin kaikkien mahdollisten siirtojen tulos. Alpha-beta algoritmissa yritetään kuitenkin rajata mitkä haarat lähdetään analysoimaan. Pahimmassa tapauksessa joudutaan kuitenkin ehkä analysoimaan kaikki.
 
-Aikavaativuutta dominoi todennäköisesti A* algoritmin toteutus. Tilavaativuus on ehkä O(Kentän koko).
+Kenttä ylläpidetään jonkin matriisina josta vierus-solmut selviävät nopeasti.
 
 Lähteet:
-- A* osa TIRA kurssin luentomateriaalista
+- https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
+- http://web.cs.ucla.edu/~rosen/161/notes/alphabeta.html
+- https://www.cs.cornell.edu/courses/cs312/2002sp/lectures/rec21.htm
 - http://vindinium.org/
