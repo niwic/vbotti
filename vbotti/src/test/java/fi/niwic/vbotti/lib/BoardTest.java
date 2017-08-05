@@ -1,12 +1,12 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class BoardExtTest {
+public class BoardTest {
 
     private static int testBoardOneSize = 18;
     private static String testBoardOneTiles = 
@@ -29,12 +29,17 @@ public class BoardExtTest {
             + "##############        ##############"
             + "  ############        ##############";
     
-    private BoardExt board;
+    private Board board;
     
     @Before
     public void createBoard() {
         GameState.Board gsb = new GameState.Board(testBoardOneTiles, testBoardOneSize);
-        board = new BoardExt(gsb);
+        GameState.Hero me = new GameState.Hero(1, "test1", "test1", 1, new GameState.Position(6, 4), 1, 1, 1, null, false);
+        GameState.Hero opp1 = new GameState.Hero(2, "test2", "test2", 1, new GameState.Position(6, 11), 1, 1, 1, null, false);
+        GameState.Hero opp2 = new GameState.Hero(3, "test3", "test3", 1, new GameState.Position(11, 12), 1, 1, 1, null, false);
+        GameState.Hero opp3 = new GameState.Hero(4, "test4", "test4", 1, new GameState.Position(8, 4), 1, 1, 1, null, false);
+        GameState.Hero[] opponents = new GameState.Hero[]{opp1, opp2, opp3};
+        board = new Board(gsb);
     }
     
     @Test
@@ -61,24 +66,28 @@ public class BoardExtTest {
         assertTrue(board.isMovePossible(pos));
     }
     
+    /*
     @Test
-    public void checkIsHeroX8Y5() {
+    public void checkIsHeroX8Y4() {
         GameState.Position pos = new GameState.Position(8, 4);
         assertTrue(board.isHero(pos));
     }
+    */
     
     @Test
     public void checkIsMovePossibleX8Y4() {
         GameState.Position pos = new GameState.Position(8, 4);
-        assertFalse(board.isMovePossible(pos));
+        assertTrue(board.isMovePossible(pos));
     }
     
+    /*
     @Test
     public void checkIsHeroX6Y5() {
         GameState.Position pos = new GameState.Position(6, 5);
         GameState.Hero hero = new GameState.Hero(1, "test", "test", 0, pos, 0, 0, 0, pos, false);
         assertTrue(board.isHero(pos, hero));
     }
+    */
     
     @Test
     public void checkIsTavernX6Y6() {

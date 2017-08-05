@@ -1,11 +1,14 @@
 package fi.niwic.vbotti.lib;
 
-public class Hero implements Tile {
-        
+import com.brianstempin.vindiniumclient.dto.GameState;
+
+public class Hero extends HasPosition implements Tile  {
+
     private int id;
 
-    public Hero(int id) {
-        this.id = id;
+    public Hero(GameState.Hero hero) {
+        this.id = hero.getId();
+        this.position = hero.getPos();
     }
 
     public int getId() {

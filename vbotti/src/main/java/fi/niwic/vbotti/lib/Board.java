@@ -1,25 +1,30 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Pelikenttää ja tilannetta kuvaava luokka.
  * 
  * @author nic
  */
-public class BoardExt {
+public class Board {
     
     private int size;
     private Tile[][] board;
+    private List<GoldMine> mines;
     
     /**
      * Parsii peliklientin luokasta kenttä ja pelitilanne.
      * 
      * @param board Klientin pelikenttä
      */
-    public BoardExt(GameState.Board board) {
+    public Board(GameState.Board board) {
+        
         this.size = board.getSize();
         this.board = new Tile[size][size];
+        this.mines = new ArrayList<>();
         
         int max = size * size * 2;
         for (int i = 0; i < max; i+=2) {
@@ -30,21 +35,16 @@ public class BoardExt {
                 case '#':
                     this.board[x][y] = new ImpassableWood();
                     break;
-                case '@':
-                    int id = Character.getNumericValue(board.getTiles().charAt(i + 1));
-                    this.board[x][y] = new Hero(id);
+                case '[':
+                    this.board[x][y] = new Tavern();
                     break;
                 case '$':
                     char owner = board.getTiles().charAt(i + 1);
                     if (owner == '-') {
-                        this.board[x][y] = new GoldMine();
+                        this.mines.add(new GoldMine(new GameState.Position(x, y)));
                     } else {
-                        this.board[x][y] = new GoldMine(Character.getNumericValue(owner));
+                        this.mines.add(new GoldMine(new GameState.Position(x, y), Character.getNumericValue(owner)));
                     }
-                    break;
-                case '[':
-                    this.board[x][y] = new Tavern();
-                    break;
                 default:
                     this.board[x][y] = new Free();
                     break;
@@ -52,15 +52,26 @@ public class BoardExt {
         }
     }
     
-    /**
-     * Siirtää pelaajan, ja palauttaa siirron jälkeisen pelitilanteen.
-     * 
-     * @param hero Pelaaja joka siirretään
-     * @param to Minne pelaaja siirretään
-     * @return Uusi pelitilanne
-     */
-    public BoardExt move(GameState.Hero hero, GameState.Position to) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Tile getTile(GameState.Position position) {
+        if (board[position.getX()][position.getY()] instanceof Free) {
+            int mine = getGoldMine(position);
+            if (mine > -1) return mines.get(mine);
+            
+            return board[position.getX()][position.getY()];
+        } else {
+            return board[position.getX()][position.getY()];
+        }
+    }
+    
+    private int getGoldMine(GameState.Position position) {
+        for (int i = 0; i < mines.size(); i++) {
+            GoldMine mine = mines.get(i);
+            if (mine.atPosition(position)) {
+                return i;
+            }
+        }
+        
+        return -1;
     }
     
     /**
@@ -73,7 +84,7 @@ public class BoardExt {
         if (position.getX() < 0 || position.getX() == size) return false;
         if (position.getY() < 0 || position.getY() == size) return false;
 
-        return board[position.getX()][position.getY()].isMovePossible();
+        return getTile(position).isMovePossible();
     }
     
     /**
@@ -83,30 +94,7 @@ public class BoardExt {
      * @return kyllä/ei
      */
     public boolean isImpassableWood(GameState.Position position) {
-        return (board[position.getX()][position.getY()] instanceof ImpassableWood);
-    }
-    
-    /**
-     * Onko tässä paikassa pelaaja?
-     * 
-     * @param position Paikka
-     * @return kyllä/ei
-     */
-    public boolean isHero(GameState.Position position) {
-        return (board[position.getX()][position.getY()] instanceof Hero);
-    }
-    
-    /**
-     * Onko tässä paikassa tietty pelaaja?
-     * 
-     * @param position Paikka
-     * @return kyllä/ei
-     */
-    public boolean isHero(GameState.Position position, GameState.Hero hero) {
-        Tile tile = board[position.getX()][position.getY()];
-        if (!(tile instanceof Hero)) return false;
-        Hero heroTile = (Hero) tile;
-        return heroTile.getId() == hero.getId();
+        return (getTile(position) instanceof ImpassableWood);
     }
     
     /**
@@ -116,7 +104,7 @@ public class BoardExt {
      * @return kyllä/ei
      */
     public boolean isTavern(GameState.Position position) {
-        return (board[position.getX()][position.getY()] instanceof Tavern);
+        return (getTile(position) instanceof Tavern);
     }
     
     /**
@@ -126,7 +114,7 @@ public class BoardExt {
      * @return kyllä/ei
      */
     public boolean isGoldMine(GameState.Position position) {
-        return (board[position.getX()][position.getY()] instanceof GoldMine);
+        return (getTile(position) instanceof GoldMine);
     }
     
     /**
@@ -136,9 +124,8 @@ public class BoardExt {
      * @return kyllä/ei
      */
     public boolean isFreeGoldMine(GameState.Position position) {
-        Tile tile = board[position.getX()][position.getY()];
-        if (!(tile instanceof GoldMine)) return false;
-        GoldMine goldMine = (GoldMine) tile;
+        if (!isGoldMine(position)) return false;
+        GoldMine goldMine = (GoldMine) getTile(position);
         return goldMine.isFree();
     }
     
@@ -149,9 +136,8 @@ public class BoardExt {
      * @return kyllä/ei
      */
     public boolean isHeroGoldMine(GameState.Position position, GameState.Hero hero) {
-        Tile tile = board[position.getX()][position.getY()];
-        if (!(tile instanceof GoldMine)) return false;
-        GoldMine goldMine = (GoldMine) tile;
+        if (!isGoldMine(position)) return false;
+        GoldMine goldMine = (GoldMine) getTile(position);
         return goldMine.isOwnedBy(hero.getId());
     }
     

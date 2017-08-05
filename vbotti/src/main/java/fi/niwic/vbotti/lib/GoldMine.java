@@ -1,17 +1,21 @@
 package fi.niwic.vbotti.lib;
 
-public class GoldMine implements Tile {
-        
+import com.brianstempin.vindiniumclient.dto.GameState;
+
+public class GoldMine extends HasPosition implements Tile {
+
     int owner;
 
-    public GoldMine() {
+    public GoldMine(GameState.Position position) {
         this.owner = 0;
+        this.position = position;
     }
 
-    public GoldMine(int owner) {
+    public GoldMine(GameState.Position position, int owner) {
         this.owner = owner;
+        this.position = position;
     }
-
+    
     public boolean isFree() {
         return owner == 0;
     }
