@@ -123,6 +123,7 @@ public class State {
         fight(hero);
         doTheMining(hero);
         drink(hero);
+        respawnDeadPeople();
     }
     
     private void fight(Hero hero) {
@@ -157,6 +158,25 @@ public class State {
     private void drink(Hero hero) {
         if (hero.getLife() > 1) {
             hero.setLife(hero.getLife() - 1);
+        }
+    }
+    
+    private void respawnDeadPeople() {
+        int killed = 0;
+        for (Hero hero : heroes) {
+            if (hero.isDead()) {
+                GameState.Position respawnPos = hero.getRespawnPos();
+                Tile respawnPosTile = getTile(respawnPos);
+                if (respawnPosTile instanceof Hero) {
+                    ((Hero) respawnPosTile).die();
+                    killed++;
+                }
+                hero.respawn(board.getMines());
+            }
+        }
+        
+        if (killed > 0) {
+            respawnDeadPeople();
         }
     }
     

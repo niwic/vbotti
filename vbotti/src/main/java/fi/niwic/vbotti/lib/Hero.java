@@ -1,6 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
+import java.util.List;
 
 public class Hero extends HasPosition implements Tile  {
 
@@ -8,17 +9,20 @@ public class Hero extends HasPosition implements Tile  {
     private int life;
     private int mines;
     private int gold;
+    
+    private GameState.Position respawnPosition;
 
     public Hero(GameState.Hero hero) {
-        this(hero.getId(), hero.getLife(), hero.getMineCount(), hero.getGold(), hero.getPos());
+        this(hero.getId(), hero.getLife(), hero.getMineCount(), hero.getGold(), hero.getPos(), hero.getSpawnPos());
     }
     
-    public Hero(int id, int life, int mines, int gold, GameState.Position position) {
+    public Hero(int id, int life, int mines, int gold, GameState.Position position, GameState.Position respawnPosition) {
         this.id = id;
         this.life = life;
         this.mines = mines;
         this.gold = gold;
         this.position = position;
+        this.respawnPosition = respawnPosition;
     }
 
     public int getId() {
@@ -27,6 +31,10 @@ public class Hero extends HasPosition implements Tile  {
 
     public GameState.Position getPos() {
         return position;
+    }
+    
+    public GameState.Position getRespawnPos() {
+        return respawnPosition;
     }
 
     public int getMineCount() {
@@ -62,11 +70,26 @@ public class Hero extends HasPosition implements Tile  {
     }
     
     public Hero copy() {
-        return new Hero(this.id, this.life, this.mines, this.gold, this.position);
+        return new Hero(this.id, this.life, this.mines, this.gold, this.position, this.respawnPosition);
     }
     
     public Hero copy(GameState.Position position) {
-        return new Hero(this.id, this.life, this.mines, this.gold, position);
+        return new Hero(this.id, this.life, this.mines, this.gold, position, this.respawnPosition);
+    }
+    
+    public void respawn(List<GoldMine> mines) {
+        this.position = respawnPosition;
+        this.life = 100;
+        this.mines = 0;
+        for (GoldMine mine : mines) {
+            if (mine.isOwnedBy(id)) {
+                mine.setOwner(0);
+            }
+        }
+    }
+    
+    public void die() {
+        life = 0;
     }
     
     @Override
