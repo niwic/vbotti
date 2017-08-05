@@ -1,30 +1,34 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+/**
+ * Ote pelitilanteesta mistä pystyy hakemaan myös pelitilanteen mutaatioita.
+ * 
+ * @author nic
+ */
 public class State {
 
     Board board;
-    GameState.Hero me;
-    GameState.Hero[] heroes;
+    Hero me;
+    Hero[] heroes;
     
     public State(GameState gameState) {
         setHeroes(gameState);
-        this.me = gameState.getHero();
+        this.me = new Hero(gameState.getHero());
         this.board = new Board(gameState.getGame().getBoard());
     }
     
-    private State(Board board, GameState.Hero[] heroes, GameState.Hero me) {
+    private State(Board board, Hero[] heroes, Hero me) {
         this.board = board;
         this.heroes = heroes;
         this.me = me;
     }
     
     private void setHeroes(GameState gs) {
-        this.heroes = new GameState.Hero[gs.getGame().getHeroes().size()];
+        this.heroes = new Hero[gs.getGame().getHeroes().size()];
         for (GameState.Hero hero : gs.getGame().getHeroes()) {
-            this.heroes[hero.getId()] = hero;
+            this.heroes[hero.getId()] = new Hero(hero);
         }
     }
     
@@ -38,7 +42,7 @@ public class State {
         Tile boardTile = board.getTile(position);
         if (boardTile instanceof Free) {
             int hero = getHero(position);
-            if (hero > -1) return new Hero(heroes[hero]);
+            if (hero > -1) return heroes[hero];
             else return boardTile;
         } else {
             return boardTile;
@@ -57,17 +61,6 @@ public class State {
         
         return -1;
     }
-        
-    /**
-     * Keroo voidaanko siirtyä tähän paikkaan.
-     * 
-     * @param position Paikka johon voisi siirtyä
-     * @return kyllä/ei
-     */
-    public boolean isMovePossible(GameState.Position position) {
-        if (!board.isMovePossible(position)) return false;
-        return getTile(position).isMovePossible();
-    }
     
     /**
      * Onko tässä paikassa tietty pelaaja?
@@ -75,7 +68,7 @@ public class State {
      * @param position Paikka
      * @return kyllä/ei
      */
-    private boolean isHero(GameState.Position position, GameState.Hero hero) {
+    private boolean isHero(GameState.Position position, Hero hero) {
         return hero.getPos().getX() == position.getX()
                 && hero.getPos().getY() == position.getY();
     }
@@ -99,61 +92,72 @@ public class State {
      * @return uusi pelitilanne missä hero siirretty
      */
     public State move(GameState.Hero hero, GameState.Position position) {
-        if (!isMovePossible(position)) return this;
+        if (!board.isMovePossible(position)) return this;
         
-        GameState.Hero[] mutatedHeroList = new GameState.Hero[heroes.length];
+        Tile target = getTile(position);
+        
+        if (!target.isMovePossible()) {
+            position = heroes[hero.getId()].getPos();
+        }
+        
+        Hero[] mutatedHeroList = new Hero[heroes.length];
         for (int i = 0; i < heroes.length; i++) {
             if (heroes[i].getId() == hero.getId()) {
-                mutatedHeroList[i] = createHero(heroes[i], position);
+                mutatedHeroList[i] = heroes[i].copy(position);
             } else {
-                mutatedHeroList[i] = createHero(heroes[i]);
+                mutatedHeroList[i] = heroes[i].copy();
             }
         }
         
-        GameState.Hero mutatedMe = mutatedHeroList[hero.getId()];
+        Hero mutatedMe = mutatedHeroList[hero.getId()];
         
-        return new State(board, mutatedHeroList, mutatedMe);
+        State newState = new State(board.copy(), mutatedHeroList, mutatedMe);
+        target = newState.getTile(position);
+        target.onMoveInto(newState, heroes[hero.getId()]);
+        newState.evaluateEndOfTurn(heroes[hero.getId()]);
+        
+        return newState;
+    }
+
+    private void evaluateEndOfTurn(Hero hero) {
+        fight(hero);
+        doTheMining(hero);
+        drink(hero);
     }
     
-    private GameState.Hero createHero(GameState.Hero hero) {
-        return new GameState.Hero(
-                hero.getId(),
-                hero.getName(),
-                hero.getUserId(),
-                hero.getElo(),
-                hero.getPos(),
-                hero.getLife(),
-                hero.getGold(),
-                hero.getMineCount(),
-                hero.getSpawnPos(),
-                hero.isCrashed()
-        );
+    private void fight(Hero hero) {
+        for (Hero opponent : heroes) {
+            if (hero.getId() != opponent.getId()) {
+                if (Math.abs(hero.getPos().getX() - opponent.getPos().getX()) == 1 
+                    && Math.abs(hero.getPos().getY() - opponent.getPos().getY()) == 1) {
+                    fight(hero, opponent);
+                }
+            }
+        }
     }
     
-    private GameState.Hero createHero(GameState.Hero hero, GameState.Position position) {
-        return new GameState.Hero(
-                hero.getId(),
-                hero.getName(),
-                hero.getUserId(),
-                hero.getElo(),
-                position,
-                hero.getLife(),
-                hero.getGold(),
-                hero.getMineCount(),
-                hero.getSpawnPos(),
-                hero.isCrashed()
-        );
+    private void fight(Hero hero, Hero opponent) {
+        opponent.setLife(opponent.getLife() - 20);
+        if (opponent.isDead()) {
+            int mines = opponent.getMineCount();
+            hero.setMineCount(hero.getMineCount() + mines);
+            opponent.setMineCount(0);
+            for (GoldMine mine : board.getMines()) {
+                if (mine.isOwnedBy(opponent.getId())) {
+                    mine.setOwner(hero.getId());
+                }
+            }
+        }
     }
     
-    /**
-     * Evaluoi uuden pelitianteen siirron jälkeen.
-     * 
-     * Päivittää hpt, kullan määrän ja kaivosten omistuksen.
-     * 
-     * @param hero Hero kenen vuoro on
-     */
-    public void evaluateTurn(GameState.Hero hero) {
-        throw new NotImplementedException();
+    private void doTheMining(Hero hero) {
+        hero.setGold(hero.getGold() + hero.getMineCount());
+    }
+    
+    private void drink(Hero hero) {
+        if (hero.getLife() > 1) {
+            hero.setLife(hero.getLife() - 1);
+        }
     }
     
 }

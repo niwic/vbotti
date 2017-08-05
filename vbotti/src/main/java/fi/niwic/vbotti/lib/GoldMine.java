@@ -16,6 +16,10 @@ public class GoldMine extends HasPosition implements Tile {
         this.position = position;
     }
     
+    public void setOwner(int id) {
+        this.owner = id;
+    }
+    
     public boolean isFree() {
         return owner == 0;
     }
@@ -27,6 +31,18 @@ public class GoldMine extends HasPosition implements Tile {
     @Override
     public boolean isMovePossible() {
         return false;
+    }
+    
+    @Override
+    public void onMoveInto(State state, Hero hero) {
+        if (hero.getId() != owner) {
+            hero.setLife(hero.getLife() - 20);
+            if (!hero.isDead()) {
+                state.heroes[owner].setMineCount(state.heroes[owner].getMineCount()-1);
+                owner = hero.getId();
+                hero.setMineCount(hero.getMineCount() + 1);
+            }
+        }
     }
 
     @Override

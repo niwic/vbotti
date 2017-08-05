@@ -12,4 +12,10 @@ public class Free implements Tile {
         return "  ";
     }
     
+    @Override
+    public void onMoveInto(State state, Hero hero) {
+        /* nothing */
+    }
+    
+    
 }

@@ -52,6 +52,21 @@ public class Board {
         }
     }
     
+    public Board(int size, Tile[][] board, List<GoldMine> mines) {
+        this.size = size;
+        this.board = board;
+        this.mines = mines;
+    }
+    
+    public Board copy() {
+        ArrayList<GoldMine> newMines = new ArrayList<>();
+        for (GoldMine oldMine : mines) {
+            newMines.add(new GoldMine(oldMine.position, oldMine.owner));
+        }
+        
+        return new Board(this.size, this.board, newMines);
+    }
+    
     public Tile getTile(GameState.Position position) {
         if (board[position.getX()][position.getY()] instanceof Free) {
             int mine = getGoldMine(position);
@@ -72,6 +87,15 @@ public class Board {
         }
         
         return -1;
+    }
+    
+    /**
+     * Listaa kaikki kaivokset.
+     * 
+     * @return kaivokset
+     */
+    public List<GoldMine> getMines() {
+        return this.mines;
     }
     
     /**
