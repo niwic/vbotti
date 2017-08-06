@@ -4,7 +4,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 
 public class GoldMine extends HasPosition implements Tile {
 
-    int owner;
+    private int owner;
 
     public GoldMine(GameState.Position position) {
         this.owner = 0;
@@ -26,6 +26,10 @@ public class GoldMine extends HasPosition implements Tile {
 
     public boolean isOwnedBy(int id) {
         return id == owner;
+    }
+    
+    public int getOwner() {
+        return owner;
     }
 
     @Override

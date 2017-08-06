@@ -28,10 +28,6 @@ public class Hero extends HasPosition implements Tile  {
     public int getId() {
         return id;
     }
-
-    public GameState.Position getPos() {
-        return position;
-    }
     
     public GameState.Position getRespawnPos() {
         return respawnPosition;
@@ -58,7 +54,7 @@ public class Hero extends HasPosition implements Tile  {
     }
     
     public void setLife(int life) {
-        if (life > 100) {
+        if (life > 99) {
             this.life = 100;
         } else {
             this.life = life;

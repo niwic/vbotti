@@ -10,4 +10,8 @@ public abstract class HasPosition {
         return at.getX() == position.getX() && at.getY() == position.getY();
     }
     
+    public GameState.Position getPosition() {
+        return position;
+    }
+    
 }

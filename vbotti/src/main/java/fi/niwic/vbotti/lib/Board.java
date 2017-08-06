@@ -52,7 +52,7 @@ public class Board {
         }
     }
     
-    public Board(int size, Tile[][] board, List<GoldMine> mines) {
+    private Board(int size, Tile[][] board, List<GoldMine> mines) {
         this.size = size;
         this.board = board;
         this.mines = mines;
@@ -61,7 +61,7 @@ public class Board {
     public Board copy() {
         ArrayList<GoldMine> newMines = new ArrayList<>();
         for (GoldMine oldMine : mines) {
-            newMines.add(new GoldMine(oldMine.position, oldMine.owner));
+            newMines.add(new GoldMine(oldMine.position, oldMine.getOwner()));
         }
         
         return new Board(this.size, this.board, newMines);
@@ -87,6 +87,15 @@ public class Board {
         }
         
         return -1;
+    }
+    
+    /**
+     * Palauttaa kentän koon.
+     * 
+     * @return kentän koko
+     */
+    public int getSize() {
+        return size;
     }
     
     /**

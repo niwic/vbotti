@@ -26,7 +26,7 @@ public class State {
     }
     
     private void setHeroes(GameState gs) {
-        this.heroes = new Hero[gs.getGame().getHeroes().size()];
+        this.heroes = new Hero[gs.getGame().getHeroes().size() + 1];
         for (GameState.Hero hero : gs.getGame().getHeroes()) {
             this.heroes[hero.getId()] = new Hero(hero);
         }
@@ -69,8 +69,8 @@ public class State {
      * @return kyllä/ei
      */
     private boolean isHero(GameState.Position position, Hero hero) {
-        return hero.getPos().getX() == position.getX()
-                && hero.getPos().getY() == position.getY();
+        return hero.getPosition().getX() == position.getX()
+                && hero.getPosition().getY() == position.getY();
     }
     
     /**
@@ -97,7 +97,7 @@ public class State {
         Tile target = getTile(position);
         
         if (!target.isMovePossible()) {
-            position = heroes[hero.getId()].getPos();
+            position = heroes[hero.getId()].getPosition();
         }
         
         Hero[] mutatedHeroList = new Hero[heroes.length];
@@ -129,8 +129,8 @@ public class State {
     private void fight(Hero hero) {
         for (Hero opponent : heroes) {
             if (hero.getId() != opponent.getId()) {
-                if (Math.abs(hero.getPos().getX() - opponent.getPos().getX()) == 1 
-                    && Math.abs(hero.getPos().getY() - opponent.getPos().getY()) == 1) {
+                if (Math.abs(hero.getPosition().getX() - opponent.getPosition().getX()) == 1 
+                    && Math.abs(hero.getPosition().getY() - opponent.getPosition().getY()) == 1) {
                     fight(hero, opponent);
                 }
             }
