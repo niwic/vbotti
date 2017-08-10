@@ -97,7 +97,7 @@ public class State {
      * @param position Paikka
      * @return kyllä/ei
      */
-    public boolean isHero(GameState.Position position) {
+    private boolean isHero(GameState.Position position) {
         return (getTile(position) instanceof Hero);
     }
     
