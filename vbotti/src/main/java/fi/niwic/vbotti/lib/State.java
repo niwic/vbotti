@@ -9,9 +9,9 @@ import com.brianstempin.vindiniumclient.dto.GameState;
  */
 public class State {
 
-    Board board;
-    Hero me;
-    Hero[] heroes;
+    private Board board;
+    private Hero me;
+    private Hero[] heroes;
     
     public State(GameState gameState) {
         setHeroes(gameState);
@@ -30,6 +30,24 @@ public class State {
         for (GameState.Hero hero : gs.getGame().getHeroes()) {
             this.heroes[hero.getId()] = new Hero(hero);
         }
+    }
+    
+    /**
+     * Palauttaa kaikki pelissä olevat herot.
+     * 
+     * @return kaikki herot
+     */
+    public Hero[] getHeroes() {
+        return heroes;
+    }
+    
+    /**
+     * Palauttaa pelaajan hero instanssin.
+     * 
+     * @return hero instanssi
+     */
+    public Hero getMe() {
+        return me;
     }
     
     /**

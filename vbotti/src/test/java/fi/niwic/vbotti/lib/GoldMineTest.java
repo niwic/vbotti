@@ -62,8 +62,8 @@ public class GoldMineTest {
         heroes.add(opponent);
         
         State state = new State(GameStateGenerator.createGameState(heroes, me));
-        Hero hero = state.me;
-        Hero owner = state.heroes[2];
+        Hero hero = state.getMe();
+        Hero owner = state.getHeroes()[2];
         owner.setMineCount(1);
         mine.setOwner(2);
         

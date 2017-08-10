@@ -42,7 +42,7 @@ public class GoldMine extends HasPosition implements Tile {
         if (hero.getId() != owner) {
             hero.setLife(hero.getLife() - 20);
             if (!hero.isDead()) {
-                state.heroes[owner].setMineCount(state.heroes[owner].getMineCount()-1);
+                state.getHeroes()[owner].setMineCount(state.getHeroes()[owner].getMineCount()-1);
                 owner = hero.getId();
                 hero.setMineCount(hero.getMineCount() + 1);
             }

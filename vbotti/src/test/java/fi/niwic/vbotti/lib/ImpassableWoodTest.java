@@ -22,7 +22,7 @@ public class ImpassableWoodTest {
     @Test
     public void checkOnMoveInto() {
         State state = new State(GameStateGenerator.createGameState());
-        Hero hero = state.me;
+        Hero hero = state.getMe();
         wood.onMoveInto(state, hero);
     }
     

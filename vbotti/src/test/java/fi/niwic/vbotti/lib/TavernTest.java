@@ -22,7 +22,7 @@ public class TavernTest {
     @Test
     public void checkOnMoveInto() {
         State state = new State(GameStateGenerator.createGameState());
-        Hero hero = state.me;
+        Hero hero = state.getMe();
         hero.setGold(10);
         hero.setLife(10);
         
