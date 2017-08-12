@@ -126,21 +126,37 @@ public class HeroTest {
     
     @Test
     public void checkRespawn() {
+        hero.respawn();
+        assertEquals(respawnPosition, hero.getPosition());
+        assertEquals(100, hero.getLife());
+    }
+    
+    @Test
+    public void checkDie() {
         GoldMine mine = new GoldMine(position, hero.getId());
         List<GoldMine> mines = new ArrayList();
         mines.add(mine);
         
-        hero.respawn(mines);
-        assertEquals(respawnPosition, hero.getPosition());
-        assertEquals(100, hero.getLife());
+        hero.die(mines);
+        assertEquals(0, hero.getLife());
         assertEquals(0, hero.getMineCount());
         assertEquals(0, mine.getOwner());
     }
     
     @Test
-    public void checkDie() {
-        hero.die();
+    public void checkDieInFight() {
+        Hero opponent = new Hero(2, 100, 3, 0, position, position);
+        
+        GoldMine mine = new GoldMine(position, hero.getId());
+        List<GoldMine> mines = new ArrayList();
+        mines.add(mine);
+        
+        hero.setMineCount(1);
+        hero.die(mines, opponent);
         assertEquals(0, hero.getLife());
+        assertEquals(0, hero.getMineCount());
+        assertEquals(2, mine.getOwner());
+        assertEquals(4, opponent.getMineCount());
     }
     
     @Test

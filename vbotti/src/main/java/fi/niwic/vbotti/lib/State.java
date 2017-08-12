@@ -175,14 +175,7 @@ public class State {
     private void fight(Hero hero, Hero opponent) {
         opponent.setLife(opponent.getLife() - 20);
         if (opponent.isDead()) {
-            int mines = opponent.getMineCount();
-            hero.setMineCount(hero.getMineCount() + mines);
-            opponent.setMineCount(0);
-            for (GoldMine mine : board.getMines()) {
-                if (mine.isOwnedBy(opponent.getId())) {
-                    mine.setOwner(hero.getId());
-                }
-            }
+            opponent.die(board.getMines(), hero);
         }
     }
     
@@ -205,10 +198,10 @@ public class State {
                 Tile respawnPosTile = getTile(respawnPos);
                 if (respawnPosTile instanceof Hero &&
                         respawnPos != hero.getPosition()) {
-                    ((Hero) respawnPosTile).die();
+                    ((Hero) respawnPosTile).die(board.getMines());
                     killed++;
                 }
-                hero.respawn(board.getMines());
+                hero.respawn();
             }
         }
         

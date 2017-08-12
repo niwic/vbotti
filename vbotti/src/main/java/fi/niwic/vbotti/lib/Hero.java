@@ -73,19 +73,28 @@ public class Hero extends HasPosition implements Tile  {
         return new Hero(this.id, this.life, this.mines, this.gold, position, this.respawnPosition);
     }
     
-    public void respawn(List<GoldMine> mines) {
+    public void respawn() {
         this.position = respawnPosition;
         this.life = 100;
+    }
+    
+    public void die(List<GoldMine> mines) {
+        die(mines, 0);
+    }
+    
+    public void die(List<GoldMine> mines, Hero killedBy) {
+        killedBy.setMineCount(killedBy.getMineCount() + this.mines);
+        die(mines, killedBy.getId());
+    }
+    
+    private void die(List<GoldMine> mines, int newOwner) {
+        this.life = 0;
         this.mines = 0;
         for (GoldMine mine : mines) {
             if (mine.isOwnedBy(id)) {
-                mine.setOwner(0);
+                mine.setOwner(newOwner);
             }
         }
-    }
-    
-    public void die() {
-        life = 0;
     }
     
     @Override
