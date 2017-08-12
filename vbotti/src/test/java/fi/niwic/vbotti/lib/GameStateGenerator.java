@@ -23,8 +23,12 @@ public class GameStateGenerator {
         return new GameState.Hero(id, "test", "test", 0, position, 100, 0, 0, position, false);
     }
     
+    public static GameState.Hero createHero(int id, GameState.Position position, int mineCount) {
+        return new GameState.Hero(id, "test", "test", 0, position, 100, 0, mineCount, position, false);
+    }
+    
     public static GameState.Board createBoard() {
-        return new GameState.Board();
+        return TestBoardOne.getBoard();
     }
     
     public static GameState.Game createGame(List<GameState.Hero> heroes, GameState.Board board) {

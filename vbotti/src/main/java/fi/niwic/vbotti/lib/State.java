@@ -1,6 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
+import java.util.List;
 
 /**
  * Ote pelitilanteesta mistä pystyy hakemaan myös pelitilanteen mutaatioita.
@@ -9,20 +10,23 @@ import com.brianstempin.vindiniumclient.dto.GameState;
  */
 public class State {
 
+    private int turn;
     private Board board;
     private Hero me;
     private Hero[] heroes;
     
     public State(GameState gameState) {
         setHeroes(gameState);
+        this.turn = gameState.getGame().getTurn();
         this.me = new Hero(gameState.getHero());
         this.board = new Board(gameState.getGame().getBoard());
     }
     
-    private State(Board board, Hero[] heroes, Hero me) {
+    private State(Board board, Hero[] heroes, Hero me, int turn) {
         this.board = board;
         this.heroes = heroes;
         this.me = me;
+        this.turn = turn;
     }
     
     private void setHeroes(GameState gs) {
@@ -51,16 +55,34 @@ public class State {
     }
     
     /**
+     * Palauttaa kaikki kentän kultakaivokset.
+     * 
+     * @return kentänt kultakaivokset
+     */
+    public List<GoldMine> getMines() {
+        return board.getMines();
+    }
+    
+    /**
+     * Palauttaa menossa olevan vuoron numeron.
+     * 
+     * @return vuoron numero
+     */
+    public int getTurn() {
+        return turn;
+    }
+    
+    /**
      * Palauttaa tässä paikassa olevan ruudun.
      * 
      * @param position paikka joka tarkistetaan
-     * @return pakassa oleva ruutu
+     * @return paikassa oleva ruutu
      */
     private Tile getTile(GameState.Position position) {
         Tile boardTile = board.getTile(position);
         if (boardTile instanceof Free) {
             int hero = getHero(position);
-            if (hero > -1) return heroes[hero];
+            if (hero > 0) return heroes[hero];
             else return boardTile;
         } else {
             return boardTile;
@@ -70,14 +92,14 @@ public class State {
     /**
      * Palauttaa hero idn jos sellainen löytyy annetusta positiosta
      * @param position positio joka tarkistetaan
-     * @return hero id, tai -1 jos ei löydy
+     * @return hero id, tai 0 jos ei löydy
      */
     private int getHero(GameState.Position position) {
-        for (int i = 0; i < heroes.length; i++) {
+        for (int i = 1; i < heroes.length; i++) {
             if (isHero(position, heroes[i])) return i;
         }
         
-        return -1;
+        return 0;
     }
     
     /**
@@ -92,34 +114,28 @@ public class State {
     }
     
     /**
-     * Onko tässä paikassa pelaaja?
-     * 
-     * @param position Paikka
-     * @return kyllä/ei
-     */
-    private boolean isHero(GameState.Position position) {
-        return (getTile(position) instanceof Hero);
-    }
-    
-    /**
      * Palauttaa mutatoidun pelitilanteen, missä kyseinen hero on siirretty
      * pyydettyyn paikkaan. Ei muuta tätä pelitilannetta.
      * 
-     * @param hero hero joka siirretään
-     * @param position paikka johon hero siirretään
+     * @param heroId heron id joka siirretään
+     * @param move suunta minne siirretään
      * @return uusi pelitilanne missä hero siirretty
      */
-    public State move(GameState.Hero hero, GameState.Position position) {
-        if (!board.isMovePossible(position)) return this;
+    public State move(int heroId, Move move) {
         
-        Tile target = getTile(position);
+        Hero hero = heroes[heroId];
+        GameState.Position moveToPosition = move.from(hero.getPosition());
+        Tile target = getTile(moveToPosition);
         
-        if (!target.isMovePossible()) {
-            position = heroes[hero.getId()].getPosition();
+        GameState.Position position;
+        if (!board.isMovePossible(moveToPosition) || !target.isMovePossible()) {
+            position = hero.getPosition();
+        } else {
+            position = moveToPosition;
         }
         
         Hero[] mutatedHeroList = new Hero[heroes.length];
-        for (int i = 0; i < heroes.length; i++) {
+        for (int i = 1; i < heroes.length; i++) {
             if (heroes[i].getId() == hero.getId()) {
                 mutatedHeroList[i] = heroes[i].copy(position);
             } else {
@@ -127,12 +143,13 @@ public class State {
             }
         }
         
-        Hero mutatedMe = mutatedHeroList[hero.getId()];
+        Hero mutatedMe = mutatedHeroList[me.getId()];
         
-        State newState = new State(board.copy(), mutatedHeroList, mutatedMe);
-        target = newState.getTile(position);
-        target.onMoveInto(newState, heroes[hero.getId()]);
-        newState.evaluateEndOfTurn(heroes[hero.getId()]);
+        int nextTurn = turn + 1;
+        State newState = new State(board.copy(), mutatedHeroList, mutatedMe, nextTurn);
+        target = newState.getTile(moveToPosition);
+        target.onMoveInto(newState, mutatedHeroList[heroId]);
+        newState.evaluateEndOfTurn(mutatedHeroList[heroId]);
         
         return newState;
     }
@@ -140,15 +157,15 @@ public class State {
     private void evaluateEndOfTurn(Hero hero) {
         fight(hero);
         doTheMining(hero);
-        drink(hero);
+        thirst(hero);
         respawnDeadPeople();
     }
     
     private void fight(Hero hero) {
-        for (Hero opponent : heroes) {
+        for (int i = 1; i < heroes.length; i++) {
+            Hero opponent = heroes[i];
             if (hero.getId() != opponent.getId()) {
-                if (Math.abs(hero.getPosition().getX() - opponent.getPosition().getX()) == 1 
-                    && Math.abs(hero.getPosition().getY() - opponent.getPosition().getY()) == 1) {
+                if (Move.isOneMoveAway(hero.getPosition(), opponent.getPosition())) {
                     fight(hero, opponent);
                 }
             }
@@ -173,7 +190,7 @@ public class State {
         hero.setGold(hero.getGold() + hero.getMineCount());
     }
     
-    private void drink(Hero hero) {
+    private void thirst(Hero hero) {
         if (hero.getLife() > 1) {
             hero.setLife(hero.getLife() - 1);
         }
@@ -181,11 +198,13 @@ public class State {
     
     private void respawnDeadPeople() {
         int killed = 0;
-        for (Hero hero : heroes) {
+        for (int i = 1; i < heroes.length; i++) {
+            Hero hero = heroes[i];
             if (hero.isDead()) {
                 GameState.Position respawnPos = hero.getRespawnPos();
                 Tile respawnPosTile = getTile(respawnPos);
-                if (respawnPosTile instanceof Hero) {
+                if (respawnPosTile instanceof Hero &&
+                        respawnPos != hero.getPosition()) {
                     ((Hero) respawnPosTile).die();
                     killed++;
                 }
