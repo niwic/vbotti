@@ -2,6 +2,7 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 import java.util.List;
+import org.apache.http.impl.entity.StrictContentLengthStrategy;
 
 public class Hero extends HasPosition implements Tile  {
 
@@ -109,7 +110,20 @@ public class Hero extends HasPosition implements Tile  {
 
     @Override
     public String toString() {
-        return "@" + id;
+        StringBuilder sb = new StringBuilder();
+        sb.append(id);
+        sb.append("@(");
+        sb.append(position.getX());
+        sb.append("/");
+        sb.append(position.getY());
+        sb.append(") life: ");
+        sb.append(life);
+        sb.append(" gold: ");
+        sb.append(gold);
+        sb.append(" mines: ");
+        sb.append(mines);
+        
+        return sb.toString();
     }
         
 }

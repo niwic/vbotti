@@ -11,6 +11,7 @@ import java.util.List;
 public class State {
 
     private int turn;
+    private int maxTurns;
     private Board board;
     private Hero me;
     private Hero[] heroes;
@@ -20,13 +21,15 @@ public class State {
         this.turn = gameState.getGame().getTurn();
         this.me = new Hero(gameState.getHero());
         this.board = new Board(gameState.getGame().getBoard());
+        this.maxTurns = gameState.getGame().getMaxTurns();
     }
     
-    private State(Board board, Hero[] heroes, Hero me, int turn) {
+    private State(Board board, Hero[] heroes, Hero me, int turn, int maxTurns) {
         this.board = board;
         this.heroes = heroes;
         this.me = me;
         this.turn = turn;
+        this.maxTurns = maxTurns;
     }
     
     private void setHeroes(GameState gs) {
@@ -70,6 +73,42 @@ public class State {
      */
     public int getTurn() {
         return turn;
+    }
+    
+    /**
+     * Onko peli loppu?
+     * 
+     * @return onko peli loppu?
+     */
+    public boolean isFinished() {
+        return turn >= maxTurns;
+    }
+    
+    /**
+     * Palauttaa pelikentän.
+     * 
+     * @return pelikenttä
+     */
+    public Board getBoard() {
+        return board;
+    }
+    
+    /**
+     * Kertoo pelin tuloksen.
+     * 
+     * Pelin tulos on (oma kulta määrä) - (parhaan vastustajan kultamäärä)
+     * 
+     * @return pelin tulos
+     */
+    public int getResult() {
+        int bestOpponent = 0;
+        for (int i = 1; i < heroes.length; i++) {
+            if (i != me.getId() && heroes[i].getGold() > bestOpponent) {
+                bestOpponent = heroes[i].getGold();
+            }
+        }
+        
+        return me.getGold() - bestOpponent;
     }
     
     /**
@@ -127,17 +166,15 @@ public class State {
         GameState.Position moveToPosition = move.from(hero.getPosition());
         Tile target = getTile(moveToPosition);
         
-        GameState.Position position;
+        GameState.Position nextPosition = moveToPosition;
         if (!board.isMovePossible(moveToPosition) || !target.isMovePossible()) {
-            position = hero.getPosition();
-        } else {
-            position = moveToPosition;
+            nextPosition = hero.getPosition();
         }
         
         Hero[] mutatedHeroList = new Hero[heroes.length];
         for (int i = 1; i < heroes.length; i++) {
             if (heroes[i].getId() == hero.getId()) {
-                mutatedHeroList[i] = heroes[i].copy(position);
+                mutatedHeroList[i] = heroes[i].copy(nextPosition);
             } else {
                 mutatedHeroList[i] = heroes[i].copy();
             }
@@ -146,7 +183,7 @@ public class State {
         Hero mutatedMe = mutatedHeroList[me.getId()];
         
         int nextTurn = turn + 1;
-        State newState = new State(board.copy(), mutatedHeroList, mutatedMe, nextTurn);
+        State newState = new State(board.copy(), mutatedHeroList, mutatedMe, nextTurn, maxTurns);
         target = newState.getTile(moveToPosition);
         target.onMoveInto(newState, mutatedHeroList[heroId]);
         newState.evaluateEndOfTurn(mutatedHeroList[heroId]);
@@ -208,6 +245,24 @@ public class State {
         if (killed > 0) {
             respawnDeadPeople();
         }
+    }
+    
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Turn: ");
+        sb.append(turn);
+        sb.append("/");
+        sb.append(maxTurns);
+        sb.append(" result: ");
+        sb.append(getResult());
+        sb.append(System.lineSeparator());
+        
+        for (int i = 1; i < heroes.length; i++) {
+            sb.append(heroes[i].toString());
+            sb.append(System.lineSeparator());
+        }
+        
+        return sb.toString();
     }
     
 }

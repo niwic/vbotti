@@ -5,7 +5,7 @@ import com.brianstempin.vindiniumclient.bot.simple.SimpleBot;
 import com.brianstempin.vindiniumclient.bot.simple.SimpleBotRunner;
 import com.brianstempin.vindiniumclient.dto.ApiKey;
 import com.google.api.client.http.GenericUrl;
-import fi.niwic.vbotti.bot.AStarBot;
+import fi.niwic.vbotti.bot.AlphaBetaBot;
 import java.security.InvalidParameterException;
 
 public class Main {
@@ -24,7 +24,7 @@ public class Main {
         final GenericUrl gameUrl = getGameUrl(arena);
         final ApiKey apiKey = getApiKey(key);
         
-        SimpleBot bot = new AStarBot();
+        SimpleBot bot = new AlphaBetaBot();
         SimpleBotRunner runner = new SimpleBotRunner(apiKey, gameUrl, bot);
         runner.call();
     }

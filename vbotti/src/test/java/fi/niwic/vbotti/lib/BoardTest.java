@@ -57,28 +57,11 @@ public class BoardTest {
         assertTrue(board.isMovePossible(pos));
     }
     
-    /*
-    @Test
-    public void checkIsHeroX8Y4() {
-        GameState.Position pos = new GameState.Position(8, 4);
-        assertTrue(board.isHero(pos));
-    }
-    */
-    
     @Test
     public void checkIsMovePossibleX8Y4() {
         GameState.Position pos = new GameState.Position(8, 4);
         assertTrue(board.isMovePossible(pos));
     }
-    
-    /*
-    @Test
-    public void checkIsHeroX6Y5() {
-        GameState.Position pos = new GameState.Position(6, 5);
-        GameState.Hero hero = new GameState.Hero(1, "test", "test", 0, pos, 0, 0, 0, pos, false);
-        assertTrue(board.isHero(pos, hero));
-    }
-    */
     
     @Test
     public void checkIsTavernX6Y6() {
@@ -146,6 +129,12 @@ public class BoardTest {
     public void checkIsMovePossibleX0Yover() {
         GameState.Position pos = new GameState.Position(0, board.getSize());
         assertFalse(board.isMovePossible(pos));
+    }
+    
+    @Test
+    public void checkGetTileOutsideBoard() {
+        Tile result = board.getTile(new GameState.Position(-1, -1));
+        assertTrue(result instanceof ImpassableWood);
     }
     
     @Test

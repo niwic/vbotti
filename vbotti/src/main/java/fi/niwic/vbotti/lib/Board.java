@@ -28,8 +28,8 @@ public class Board {
         
         int max = size * size * 2;
         for (int i = 0; i < max; i+=2) {
-            int x = (i % (size * 2)) / 2;
-            int y = i / (size * 2);
+            int y = (i % (size * 2)) / 2;
+            int x = i / (size * 2);
             char definition = board.getTiles().charAt(i);
             switch (definition) {
                 case '#':
@@ -68,6 +68,10 @@ public class Board {
     }
     
     public Tile getTile(GameState.Position position) {
+        if (!isInsideBoard(position)) {
+            return new ImpassableWood();
+        }
+        
         if (board[position.getX()][position.getY()] instanceof Free) {
             int mine = getGoldMine(position);
             if (mine > -1) return mines.get(mine);
@@ -114,10 +118,21 @@ public class Board {
      * @return kyllä/ei
      */
     public boolean isMovePossible(GameState.Position position) {
-        if (position.getX() < 0 || position.getX() == size) return false;
-        if (position.getY() < 0 || position.getY() == size) return false;
+        if (!isInsideBoard(position)) return false;
 
         return getTile(position).isMovePossible();
+    }
+    
+    /**
+     * Onko positio pelikentällä?
+     * @param position tarkistettava positio
+     * @return onko kentällä?
+     */
+    public boolean isInsideBoard(GameState.Position position) {
+        if (position.getX() < 0 || position.getX() == size) return false;
+        if (position.getY() < 0 || position.getY() == size) return false;
+        
+        return true;
     }
     
     /**

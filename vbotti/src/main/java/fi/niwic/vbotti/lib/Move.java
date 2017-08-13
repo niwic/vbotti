@@ -1,5 +1,6 @@
 package fi.niwic.vbotti.lib;
 
+import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
 public enum Move {
@@ -12,10 +13,10 @@ public enum Move {
     
     public GameState.Position from(GameState.Position from) {
         switch(move) {
-            case 1: return new GameState.Position(from.getX() - 1, from.getY());
-            case 2: return new GameState.Position(from.getX() + 1, from.getY());
-            case 3: return new GameState.Position(from.getX(), from.getY() - 1);
-            case 4: return new GameState.Position(from.getX(), from.getY() + 1);
+            case 1: return new GameState.Position(from.getX(), from.getY() - 1);
+            case 2: return new GameState.Position(from.getX(), from.getY() + 1);
+            case 3: return new GameState.Position(from.getX() - 1, from.getY());
+            case 4: return new GameState.Position(from.getX() + 1, from.getY());
             default: return from;
         }
     }
@@ -27,5 +28,15 @@ public enum Move {
         int moveDiff = xDiff + yDiff;
         
         return moveDiff == 1;
+    }
+    
+    public BotMove toBotMove() {
+        switch(move) {
+            case 1: return BotMove.WEST;
+            case 2: return BotMove.EAST;
+            case 3: return BotMove.NORTH;
+            case 4: return BotMove.SOUTH;
+            default: return BotMove.STAY;
+        }
     }
 }

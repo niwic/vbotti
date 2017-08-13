@@ -172,7 +172,7 @@ public class HeroTest {
     
     @Test
     public void checkToString() {
-        assertEquals("@1", hero.toString());
+        assertEquals("1@(1/2) life: 100 gold: 0 mines: 0", hero.toString());
     }
     
 }

@@ -15,6 +15,10 @@ public class GameStateGenerator {
     
     public static GameState createGameState(List<GameState.Hero> heroes, GameState.Hero me) {
         GameState.Board board = createBoard();
+        return createGameState(heroes, me, board);
+    }
+    
+    public static GameState createGameState(List<GameState.Hero> heroes, GameState.Hero me, GameState.Board board) {
         GameState.Game game = createGame(heroes, board);
         return new GameState(game, me, "test", "test", "test");
     }

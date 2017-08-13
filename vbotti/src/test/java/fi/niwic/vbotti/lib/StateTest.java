@@ -4,6 +4,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,10 +55,36 @@ public class StateTest {
     }
     
     @Test
+    public void checkIsFinished() {
+        State afterMove = state;
+        for (int i = 0; i < 10; i++) {
+            afterMove = afterMove.move(1, Move.STAY);
+        }
+        
+        assertTrue(afterMove.isFinished());
+    }
+    
+    @Test
+    public void checkIsNotFinished() {
+        State afterMove = state;
+        for (int i = 0; i < 9; i++) {
+            afterMove = afterMove.move(1, Move.STAY);
+        }
+        
+        assertFalse(afterMove.isFinished());
+    }
+    
+    @Test
     public void checkMyMoveNotPossible() {
         State afterMove = state.move(me.getId(), Move.LEFT);
         assertEquals(state.getMe().position, afterMove.getMe().position);
         assertEquals(state.getTurn() + 1, afterMove.getTurn());
+    }
+    
+    @Test
+    public void checkGetResult() {
+        State afterMove = state.move(4, Move.STAY);
+        assertEquals(-3, afterMove.getResult());
     }
     
     @Test
@@ -206,4 +233,16 @@ public class StateTest {
         assertEquals(state.getHeroes()[4].getPosition(), afterMove.getHeroes()[4].getPosition());
         assertEquals(state.getHeroes()[3].getPosition(), afterMove.getHeroes()[3].getPosition());
     }
+    
+    @Test
+    public void checkToString() {
+        String expected = "Turn: 0/10 result: 0" + System.lineSeparator()
+                + "1@(7/0) life: 100 gold: 0 mines: 0" + System.lineSeparator()
+                + "2@(8/5) life: 100 gold: 0 mines: 1" + System.lineSeparator()
+                + "3@(9/6) life: 100 gold: 0 mines: 2" + System.lineSeparator()
+                + "4@(10/7) life: 100 gold: 0 mines: 3" + System.lineSeparator();
+        
+        assertEquals(expected, state.toString());
+    }
+    
 }
