@@ -12,10 +12,10 @@ public class MoveTest {
     @Test
     public void checkFrom() {
         GameState.Position position = new GameState.Position(1, 1);
-        assertEquals(new GameState.Position(0, 1), Move.LEFT.from(position));
-        assertEquals(new GameState.Position(2, 1), Move.RIGHT.from(position));
-        assertEquals(new GameState.Position(1, 0), Move.UP.from(position));
-        assertEquals(new GameState.Position(1, 2), Move.DOWN.from(position));
+        assertEquals(new GameState.Position(1, 0), Move.LEFT.from(position));
+        assertEquals(new GameState.Position(1, 2), Move.RIGHT.from(position));
+        assertEquals(new GameState.Position(0, 1), Move.UP.from(position));
+        assertEquals(new GameState.Position(2, 1), Move.DOWN.from(position));
         assertEquals(position, Move.STAY.from(position));
     }
     

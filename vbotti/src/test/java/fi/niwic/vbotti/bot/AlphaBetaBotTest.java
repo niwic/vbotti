@@ -23,7 +23,6 @@ public class AlphaBetaBotTest {
     
     @Test
     public void checkShouldMoveTowardsGoldMine() {
-        /*
         GameState.Hero me = GameStateGenerator.createHero(1, new GameState.Position(8,1));
         List<GameState.Hero> heroes = new ArrayList();
         heroes.add(me);
@@ -31,8 +30,7 @@ public class AlphaBetaBotTest {
         GameState gameState = GameStateGenerator.createGameState(heroes, me);
         Move move = bot.move(new State(gameState));
         
-        assertEquals(Move.DOWN, move);
-        */
+        assertEquals(Move.STAY, move);
     }
     
     @Test
@@ -46,7 +44,7 @@ public class AlphaBetaBotTest {
         GameState gameState = GameStateGenerator.createGameState(heroes, me, TestBoardTwo.getBoard());
         Move move = bot.move(new State(gameState));
         
-        assertEquals(Move.RIGHT, move);
+        assertEquals(Move.DOWN, move);
     }
     
 }

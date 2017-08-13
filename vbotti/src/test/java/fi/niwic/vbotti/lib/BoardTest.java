@@ -53,13 +53,13 @@ public class BoardTest {
     
     @Test
     public void checkMovePossibleX7Y0() {
-        GameState.Position pos = new GameState.Position(7, 0);
+        GameState.Position pos = new GameState.Position(0, 7);
         assertTrue(board.isMovePossible(pos));
     }
     
     @Test
     public void checkIsMovePossibleX8Y4() {
-        GameState.Position pos = new GameState.Position(8, 4);
+        GameState.Position pos = new GameState.Position(4, 8);
         assertTrue(board.isMovePossible(pos));
     }
     
@@ -71,13 +71,13 @@ public class BoardTest {
     
     @Test
     public void checkIsGoldMineX6Y3() {
-        GameState.Position pos = new GameState.Position(7, 3);
+        GameState.Position pos = new GameState.Position(3, 7);
         assertTrue(board.isGoldMine(pos));
     }
     
     @Test
     public void checkIsFreeGoldMineX7Y14() {
-        GameState.Position pos = new GameState.Position(7, 14);
+        GameState.Position pos = new GameState.Position(14, 7);
         assertTrue(board.isFreeGoldMine(pos));
     }
     
@@ -89,7 +89,7 @@ public class BoardTest {
     
     @Test
     public void checkIsHeroGoldMineX10Y3() {
-        GameState.Position pos = new GameState.Position(10, 3);
+        GameState.Position pos = new GameState.Position(3, 10);
         GameState.Hero hero = new GameState.Hero(4, "test", "test", 0, pos, 0, 0, 0, pos, false);
         assertTrue(board.isHeroGoldMine(pos, hero));
     }
@@ -103,7 +103,7 @@ public class BoardTest {
    
     @Test
     public void checkIsMovePossibleX0Y17() {
-        GameState.Position pos = new GameState.Position(0, 17);
+        GameState.Position pos = new GameState.Position(17, 0);
         assertTrue(board.isMovePossible(pos));
     }
     
@@ -145,14 +145,14 @@ public class BoardTest {
     @Test
     public void checkGetMines() {
         List<GoldMine> mines = new ArrayList();
-        mines.add(new GoldMine(new GameState.Position(7,3), 4));
-        mines.add(new GoldMine(new GameState.Position(10,3), 4));
-        mines.add(new GoldMine(new GameState.Position(7,8), 4));
-        mines.add(new GoldMine(new GameState.Position(10,8), 4));
-        mines.add(new GoldMine(new GameState.Position(7,9), 4));
-        mines.add(new GoldMine(new GameState.Position(10,9), 4));
-        mines.add(new GoldMine(new GameState.Position(7,14), 0));
-        mines.add(new GoldMine(new GameState.Position(10,14), 0));
+        mines.add(new GoldMine(new GameState.Position(3,7), 4));
+        mines.add(new GoldMine(new GameState.Position(3,10), 4));
+        mines.add(new GoldMine(new GameState.Position(8,7), 4));
+        mines.add(new GoldMine(new GameState.Position(8,10), 4));
+        mines.add(new GoldMine(new GameState.Position(9,7), 4));
+        mines.add(new GoldMine(new GameState.Position(9,10), 4));
+        mines.add(new GoldMine(new GameState.Position(14,7), 0));
+        mines.add(new GoldMine(new GameState.Position(14,10), 0));
         
         for (int i = 0; i < board.getMines().size(); i++) {
             GoldMine mine1 = board.getMines().get(i);

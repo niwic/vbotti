@@ -17,7 +17,7 @@ public class StateTest {
     
     @Before
     public void setUp() {
-        me = GameStateGenerator.createHero(1, new GameState.Position(7, 0));
+        me = GameStateGenerator.createHero(1, new GameState.Position(0, 7));
         gs = GameStateGenerator.createGameState(createHeroes(me), me);
         state = new State(gs);
     }
@@ -27,7 +27,7 @@ public class StateTest {
         
         for (int i = 0; i < 4; i++) {
             if (i+1 != me.getId()) {
-                GameState.Position position = new GameState.Position(7+i, 4+i);
+                GameState.Position position = new GameState.Position(4+i, 7+i);
                 heroes.add(GameStateGenerator.createHero(i+1, position, i));
             }
         }
@@ -57,7 +57,7 @@ public class StateTest {
     @Test
     public void checkIsFinished() {
         State afterMove = state;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             afterMove = afterMove.move(1, Move.STAY);
         }
         
@@ -104,7 +104,7 @@ public class StateTest {
                 .move(me.getId(), Move.DOWN)
                 .move(me.getId(), Move.RIGHT);
         
-        GameState.Position afterMovePosition = new GameState.Position(me.getPos().getX() + 2, me.getPos().getY() + 3);
+        GameState.Position afterMovePosition = new GameState.Position(me.getPos().getX() + 3, me.getPos().getY() + 2);
         assertEquals(afterMovePosition, afterMove.getMe().position);
         assertEquals(state.getTurn() + 6, afterMove.getTurn());
         
@@ -124,7 +124,7 @@ public class StateTest {
                 .move(me.getId(), Move.DOWN)
                 .move(me.getId(), Move.DOWN);
         
-        GameState.Position afterMovePosition = new GameState.Position(me.getPos().getX() + 1, me.getPos().getY() + 4);
+        GameState.Position afterMovePosition = new GameState.Position(me.getPos().getX() + 4, me.getPos().getY() + 1);
         assertEquals(afterMovePosition, afterMove.getMe().position);
         assertEquals(state.getTurn() + 5, afterMove.getTurn());
         
@@ -149,8 +149,8 @@ public class StateTest {
                 .move(opponent.getId(), Move.UP);
         
         GameState.Position afterMovePosition = new GameState.Position(
-                opponent.getPosition().getX() + 1,
-                opponent.getPosition().getY());
+                opponent.getPosition().getX(),
+                opponent.getPosition().getY() + 1);
         assertEquals(afterMovePosition, afterMove.getHeroes()[4].position);
         assertEquals(state.getTurn() + 2, afterMove.getTurn());
         
@@ -236,11 +236,11 @@ public class StateTest {
     
     @Test
     public void checkToString() {
-        String expected = "Turn: 0/10 result: 0" + System.lineSeparator()
-                + "1@(7/0) life: 100 gold: 0 mines: 0" + System.lineSeparator()
-                + "2@(8/5) life: 100 gold: 0 mines: 1" + System.lineSeparator()
-                + "3@(9/6) life: 100 gold: 0 mines: 2" + System.lineSeparator()
-                + "4@(10/7) life: 100 gold: 0 mines: 3" + System.lineSeparator();
+        String expected = "Turn: 0/100 result: 0" + System.lineSeparator()
+                + "1@(0/7) life: 100 gold: 0 mines: 0" + System.lineSeparator()
+                + "2@(5/8) life: 100 gold: 0 mines: 1" + System.lineSeparator()
+                + "3@(6/9) life: 100 gold: 0 mines: 2" + System.lineSeparator()
+                + "4@(7/10) life: 100 gold: 0 mines: 3" + System.lineSeparator();
         
         assertEquals(expected, state.toString());
     }
