@@ -3,6 +3,7 @@ Vindinium-botti
 
 ## Dokumentaatio
 - [Määrittely](dokumentaatio/määrittely.md)
+- [Toteutus](dokumentaatio/toteutus.md)
 
 ## Viikkoraportit
 - [Viikko 1](dokumentaatio/viikkoraportti1.md)
