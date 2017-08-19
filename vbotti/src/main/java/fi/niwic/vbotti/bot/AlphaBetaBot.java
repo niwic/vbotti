@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AlphaBetaBot implements SimpleBot {
 
-    private final int maxDepth = 9;
+    private final int maxDepth = 11;
     
     @Override
     public BotMove move(GameState gs) {
@@ -22,22 +22,23 @@ public class AlphaBetaBot implements SimpleBot {
         
         System.out.println(state);
         
-        List<MoveAndState> mutations = getMutations(state, state.getMe().getId());
+        ArrayList<Move> possibleMoves = getPossibleMoves(state, state.getMe().getId());
         int best = Integer.MIN_VALUE;
-        MoveAndState bestMove = mutations.get(0);
-        for (MoveAndState mutation : mutations) {
-            int result = turn(mutation.state, nextHeroId(mutation.state, state.getMe().getId()));
-            System.out.println("Alternative move " + mutation.move + " result " + result);
-            if (result > best) {
+        Move bestMove = possibleMoves.get(0);
+        for (Move move : possibleMoves) {
+            State mutatedState = state.move(state.getMe().getId(), move);
+            int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 0, best, Integer.MAX_VALUE);
+            System.out.println("Alternative move " + move + " result " + result);
+            if (result >= best) {
                 best = result;
-                bestMove = mutation;
+                bestMove = move;
             }
         }
         
-        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove.move);
+        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove);
         System.out.println();
         
-        return bestMove.move;
+        return bestMove;
     }
 
     @Override
@@ -56,38 +57,36 @@ public class AlphaBetaBot implements SimpleBot {
     
     public int turn(State state, int heroId, int depth, int alpha, int beta) {
         
-        //System.out.println(heroId + ": " + alpha + "/" + beta);
-        
         if (state.isFinished() || depth > maxDepth) {
-            //System.out.println(heroId + ": " + alpha + "/" + beta);
-            return state.getResult();
-        } else if (alpha >= beta) {
-            //System.out.println(heroId + " pruning!");
             return state.getResult();
         } else {
-            List<MoveAndState> mutations = getMutations(state, heroId);
+            ArrayList<Move> possibleMoves = getPossibleMoves(state, heroId);
             if (heroId == state.getMe().getId()) {
-                int best = Integer.MIN_VALUE;
-                for (MoveAndState mutation : mutations) {
-                    int result = turn(mutation.state, nextHeroId(state, heroId), depth + 1, alpha, beta);
-                    if (result > best) {
-                        best = result;
+                for (Move move : possibleMoves) {
+                    State mutatedState = state.move(heroId, move);
+                    int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
+                    if (result >= beta) {
+                        return beta;
+                    }
+                    if (result > alpha) {
                         alpha = result;
                     }
                 }
                 
-                return best;
+                return alpha;
             } else {
-                int worst = Integer.MAX_VALUE;
-                for (MoveAndState mutation : mutations) {
-                    int result = turn(mutation.state, nextHeroId(state, heroId), depth + 1, alpha, beta);
-                    if (result < worst) {
-                        worst = result;
+                for (Move move : possibleMoves) {
+                    State mutatedState = state.move(heroId, move);
+                    int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
+                    if (result <= alpha) {
+                        return alpha;
+                    }
+                    if (result < beta) {
                         beta = result;
                     }
                 }
                 
-                return worst;
+                return beta;
             }
         }
         
@@ -98,18 +97,21 @@ public class AlphaBetaBot implements SimpleBot {
         else return 1;
     }
     
-    private List<MoveAndState> getMutations(State state, int heroId) {
-        List<MoveAndState> newStates = new ArrayList();
+    private ArrayList<Move> getPossibleMoves(State state, int heroId) {
+        ArrayList<Move> possibleMoves = new ArrayList();
+        possibleMoves.add(Move.STAY);
         for (Move move : Move.values()) {
-            GameState.Position position = state.getHeroes()[heroId].getPosition();
-            if (state.getBoard().isInsideBoard(move.from(position))) {
-                newStates.add(new MoveAndState(move, state.move(heroId, move)));
-                //System.out.println("New State for " + heroId + " moving " + move);
-                //System.out.println(state);
+            if (move != Move.STAY) {
+                GameState.Position position = state.getHeroes()[heroId].getPosition();
+                GameState.Position destination = move.from(position);
+                if (state.getBoard().isInsideBoard(destination)
+                        && !state.getBoard().isImpassableWood(destination)) {
+                    possibleMoves.add(move);
+                }
             }
         }
         
-        return newStates;
+        return possibleMoves;
     }
     
     class MoveAndState {
