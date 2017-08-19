@@ -1,7 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 
 /**
  * Ote pelitilanteesta mistä pystyy hakemaan myös pelitilanteen mutaatioita.
@@ -62,7 +62,7 @@ public class State {
      * 
      * @return kentänt kultakaivokset
      */
-    public List<GoldMine> getMines() {
+    public ArrayList<GoldMine> getMines() {
         return board.getMines();
     }
     

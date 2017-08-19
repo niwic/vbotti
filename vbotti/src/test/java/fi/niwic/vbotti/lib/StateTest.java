@@ -1,8 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.ArrayList;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,8 +21,8 @@ public class StateTest {
         state = new State(gs);
     }
     
-    private List<GameState.Hero> createHeroes(GameState.Hero me) {
-        List<GameState.Hero> heroes = new ArrayList();
+    private ArrayList<GameState.Hero> createHeroes(GameState.Hero me) {
+        ArrayList<GameState.Hero> heroes = new ArrayList();
         
         for (int i = 0; i < 4; i++) {
             if (i+1 != me.getId()) {

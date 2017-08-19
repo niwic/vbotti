@@ -1,8 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.List;
-import org.apache.http.impl.entity.StrictContentLengthStrategy;
+import fi.niwic.util.ArrayList;
 
 public class Hero extends HasPosition implements Tile  {
 
@@ -79,16 +78,16 @@ public class Hero extends HasPosition implements Tile  {
         this.life = 100;
     }
     
-    public void die(List<GoldMine> mines) {
+    public void die(ArrayList<GoldMine> mines) {
         die(mines, 0);
     }
     
-    public void die(List<GoldMine> mines, Hero killedBy) {
+    public void die(ArrayList<GoldMine> mines, Hero killedBy) {
         killedBy.setMineCount(killedBy.getMineCount() + this.mines);
         die(mines, killedBy.getId());
     }
     
-    private void die(List<GoldMine> mines, int newOwner) {
+    private void die(ArrayList<GoldMine> mines, int newOwner) {
         this.life = 0;
         this.mines = 0;
         for (GoldMine mine : mines) {

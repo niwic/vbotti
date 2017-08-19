@@ -1,8 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.ArrayList;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -57,7 +56,7 @@ public class GoldMineTest {
     public void checkOnMoveInto() {
         GameState.Hero me = GameStateGenerator.createHero(1, position);
         GameState.Hero opponent = GameStateGenerator.createHero(2, position);
-        List<GameState.Hero> heroes = new ArrayList();
+        ArrayList<GameState.Hero> heroes = new ArrayList();
         heroes.add(me);
         heroes.add(opponent);
         
@@ -82,7 +81,7 @@ public class GoldMineTest {
     public void checkOnMoveIntoNotOwned() {
         GameState.Hero me = GameStateGenerator.createHero(1, position);
         GameState.Hero opponent = GameStateGenerator.createHero(2, position);
-        List<GameState.Hero> heroes = new ArrayList();
+        ArrayList<GameState.Hero> heroes = new ArrayList();
         heroes.add(me);
         heroes.add(opponent);
         
@@ -99,7 +98,7 @@ public class GoldMineTest {
     public void checkOnMoveIntoOwnedByNomad() {
         GameState.Hero me = GameStateGenerator.createHero(1, position);
         GameState.Hero opponent = GameStateGenerator.createHero(2, position);
-        List<GameState.Hero> heroes = new ArrayList();
+        ArrayList<GameState.Hero> heroes = new ArrayList();
         heroes.add(me);
         heroes.add(opponent);
         

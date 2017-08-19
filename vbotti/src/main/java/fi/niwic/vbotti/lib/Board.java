@@ -1,8 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.ArrayList;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 
 /**
  * Pelikenttää ja tilannetta kuvaava luokka.
@@ -13,7 +12,7 @@ public class Board {
     
     private int size;
     private Tile[][] board;
-    private List<GoldMine> mines;
+    private ArrayList<GoldMine> mines;
     
     /**
      * Parsii peliklientin luokasta kenttä ja pelitilanne.
@@ -52,14 +51,14 @@ public class Board {
         }
     }
     
-    private Board(int size, Tile[][] board, List<GoldMine> mines) {
+    private Board(int size, Tile[][] board, ArrayList<GoldMine> mines) {
         this.size = size;
         this.board = board;
         this.mines = mines;
     }
     
     public Board copy() {
-        ArrayList<GoldMine> newMines = new ArrayList<>();
+        ArrayList<GoldMine> newMines = new ArrayList();
         for (GoldMine oldMine : mines) {
             newMines.add(new GoldMine(oldMine.position, oldMine.getOwner()));
         }
@@ -107,7 +106,7 @@ public class Board {
      * 
      * @return kaivokset
      */
-    public List<GoldMine> getMines() {
+    public ArrayList<GoldMine> getMines() {
         return this.mines;
     }
     

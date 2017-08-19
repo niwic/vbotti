@@ -5,8 +5,7 @@ import com.brianstempin.vindiniumclient.bot.simple.SimpleBot;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.vbotti.lib.Move;
 import fi.niwic.vbotti.lib.State;
-import java.util.ArrayList;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 
 public class AlphaBetaBot implements SimpleBot {
 

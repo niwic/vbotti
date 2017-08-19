@@ -1,8 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.ArrayList;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -134,7 +133,7 @@ public class HeroTest {
     @Test
     public void checkDie() {
         GoldMine mine = new GoldMine(position, hero.getId());
-        List<GoldMine> mines = new ArrayList();
+        ArrayList<GoldMine> mines = new ArrayList();
         mines.add(mine);
         
         hero.die(mines);
@@ -148,7 +147,7 @@ public class HeroTest {
         Hero opponent = new Hero(2, 100, 3, 0, position, position);
         
         GoldMine mine = new GoldMine(position, hero.getId());
-        List<GoldMine> mines = new ArrayList();
+        ArrayList<GoldMine> mines = new ArrayList();
         mines.add(mine);
         
         hero.setMineCount(1);

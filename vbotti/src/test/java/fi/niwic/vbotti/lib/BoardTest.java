@@ -1,8 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
-import java.util.ArrayList;
-import java.util.List;
+import fi.niwic.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -144,7 +143,7 @@ public class BoardTest {
     
     @Test
     public void checkGetMines() {
-        List<GoldMine> mines = new ArrayList();
+        ArrayList<GoldMine> mines = new ArrayList();
         mines.add(new GoldMine(new GameState.Position(3,7), 4));
         mines.add(new GoldMine(new GameState.Position(3,10), 4));
         mines.add(new GoldMine(new GameState.Position(8,7), 4));
