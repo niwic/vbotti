@@ -2,6 +2,7 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.ArrayList;
+import java.util.ArrayDeque;
 
 /**
  * Pelikenttää ja tilannetta kuvaava luokka.
@@ -179,13 +180,62 @@ public class Board {
     /**
      * Onko tässä paikassa pelaajan omistama kultakaivos?
      * 
-     * @param position Paikka
+     * @param position Paikka paikka mitä tarkistaa
+     * @param hero Hero kyseessä oleva pelaaja
      * @return kyllä/ei
      */
-    public boolean isHeroGoldMine(GameState.Position position, GameState.Hero hero) {
+    public boolean isHeroGoldMine(GameState.Position position, int heroId) {
         if (!isGoldMine(position)) return false;
         GoldMine goldMine = (GoldMine) getTile(position);
-        return goldMine.isOwnedBy(hero.getId());
+        return goldMine.isOwnedBy(heroId);
+    }
+    
+    public int distanceToClosestGoldMineFrom(GameState.Position from, int heroId) {
+        int closest = Integer.MAX_VALUE;
+        for (GoldMine mine: mines) {
+            if (!mine.isOwnedBy(heroId)) {
+                int distance = Move.distance(from, mine.getPosition());
+                if (distance < closest) {
+                    closest = distance;
+                }
+            }
+        }
+        
+        return closest;
+    }
+    
+    public int distanceToClosestGoldMineFromBFS(GameState.Position from, int heroId) {
+        
+        boolean seen[][] = new boolean[board.length][board[0].length];
+        int distance[][] = new int[board.length][board[0].length];
+     
+        ArrayDeque<GameState.Position> queue = new ArrayDeque();
+        queue.add(from);
+        
+        while (!queue.isEmpty()) {
+            GameState.Position current = queue.poll();
+            seen[current.getY()][current.getX()] = true;
+            
+            GameState.Position moves[] = new GameState.Position[] {
+                Move.STAY.from(current),Move.UP.from(current),Move.DOWN.from(current),
+                Move.LEFT.from(current),Move.RIGHT.from(current)
+            };
+            
+            for (GameState.Position position : moves) {
+                if (isGoldMine(position)) {
+                    GoldMine mine = (GoldMine) getTile(position);
+                    if (!mine.isOwnedBy(heroId)) {
+                        return distance[current.getY()][current.getX()] + 1;
+                    }
+                } else if (isMovePossible(position) && !seen[position.getY()][position.getX()]) {
+                    seen[position.getY()][position.getX()] = true;
+                    queue.add(position);
+                    distance[position.getY()][position.getX()] = distance[current.getY()][current.getX()] + 1;
+                }
+            }
+        }
+        
+        return Integer.MAX_VALUE;
     }
     
 }

@@ -90,14 +90,14 @@ public class BoardTest {
     public void checkIsHeroGoldMineX10Y3() {
         GameState.Position pos = new GameState.Position(3, 10);
         GameState.Hero hero = new GameState.Hero(4, "test", "test", 0, pos, 0, 0, 0, pos, false);
-        assertTrue(board.isHeroGoldMine(pos, hero));
+        assertTrue(board.isHeroGoldMine(pos, hero.getId()));
     }
     
     @Test
     public void checkIsHeroGoldMineX11Y3() {
         GameState.Position pos = new GameState.Position(11, 3);
         GameState.Hero hero = new GameState.Hero(4, "test", "test", 0, pos, 0, 0, 0, pos, false);
-        assertFalse(board.isHeroGoldMine(pos, hero));
+        assertFalse(board.isHeroGoldMine(pos, hero.getId()));
     }
    
     @Test

@@ -6,6 +6,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.vbotti.lib.Move;
 import fi.niwic.vbotti.lib.State;
 import fi.niwic.util.ArrayList;
+import java.util.Collections;
 
 public class AlphaBetaBot implements SimpleBot {
 
@@ -21,23 +22,23 @@ public class AlphaBetaBot implements SimpleBot {
         
         System.out.println(state);
         
-        ArrayList<Move> possibleMoves = getPossibleMoves(state, state.getMe().getId());
+        ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, state.getMe().getId(), true);
         int best = Integer.MIN_VALUE;
-        Move bestMove = possibleMoves.get(0);
-        for (Move move : possibleMoves) {
-            State mutatedState = state.move(state.getMe().getId(), move);
+        MoveAndGoldmineDistance bestMove = possibleMoves.get(0);
+        for (MoveAndGoldmineDistance move : possibleMoves) {
+            State mutatedState = state.move(state.getMe().getId(), move.move);
             int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 0, best, Integer.MAX_VALUE);
-            System.out.println("Alternative move " + move + " result " + result);
-            if (result >= best) {
+            System.out.println("Alternative move: " + move.move + " result: " + result + " gold mine distance: " + move.distance);
+            if (result > best) {
                 best = result;
                 bestMove = move;
             }
         }
         
-        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove);
+        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove.move);
         System.out.println();
         
-        return bestMove;
+        return bestMove.move;
     }
 
     @Override
@@ -59,10 +60,10 @@ public class AlphaBetaBot implements SimpleBot {
         if (state.isFinished() || depth > maxDepth) {
             return state.getResult();
         } else {
-            ArrayList<Move> possibleMoves = getPossibleMoves(state, heroId);
+            ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, heroId, false);
             if (heroId == state.getMe().getId()) {
-                for (Move move : possibleMoves) {
-                    State mutatedState = state.move(heroId, move);
+                for (MoveAndGoldmineDistance move : possibleMoves) {
+                    State mutatedState = state.move(heroId, move.move);
                     int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
                     if (result >= beta) {
                         return beta;
@@ -74,8 +75,8 @@ public class AlphaBetaBot implements SimpleBot {
                 
                 return alpha;
             } else {
-                for (Move move : possibleMoves) {
-                    State mutatedState = state.move(heroId, move);
+                for (MoveAndGoldmineDistance move : possibleMoves) {
+                    State mutatedState = state.move(heroId, move.move);
                     int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
                     if (result <= alpha) {
                         return alpha;
@@ -96,30 +97,60 @@ public class AlphaBetaBot implements SimpleBot {
         else return 1;
     }
     
-    private ArrayList<Move> getPossibleMoves(State state, int heroId) {
-        ArrayList<Move> possibleMoves = new ArrayList();
-        possibleMoves.add(Move.STAY);
+    private ArrayList<MoveAndGoldmineDistance> getPossibleMoves(State state, int heroId, boolean sortByDistance) {
+        ArrayList<MoveAndGoldmineDistance> possibleMoves = new ArrayList();
+        
+        GameState.Position currentPosition = state.getHeroes()[heroId].getPosition();
+        int closestGoldMine = 0;
+        if (sortByDistance) {
+            closestGoldMine = state.getBoard().distanceToClosestGoldMineFromBFS(currentPosition, heroId);
+        }
+        possibleMoves.add(
+                new MoveAndGoldmineDistance(
+                        Move.STAY,
+                        closestGoldMine
+                )
+        );
+        
         for (Move move : Move.values()) {
             if (move != Move.STAY) {
-                GameState.Position position = state.getHeroes()[heroId].getPosition();
-                GameState.Position destination = move.from(position);
+                GameState.Position destination = move.from(currentPosition);
                 if (state.getBoard().isInsideBoard(destination)
-                        && !state.getBoard().isImpassableWood(destination)) {
-                    possibleMoves.add(move);
+                        && !state.getBoard().isImpassableWood(destination)
+                        && !state.getBoard().isHeroGoldMine(destination, heroId)) {
+                    closestGoldMine = 0;
+                    if (sortByDistance) {
+                        closestGoldMine = state.getBoard().distanceToClosestGoldMineFromBFS(destination, heroId);
+                    }
+                    possibleMoves.add(new MoveAndGoldmineDistance(move, closestGoldMine));
                 }
             }
         }
         
-        return possibleMoves;
+        java.util.ArrayList sortable = new java.util.ArrayList(possibleMoves);
+        if (sortByDistance) {
+            Collections.sort(sortable);
+        }
+        
+        ArrayList sorted = new ArrayList();
+        sorted.addAll(sortable);
+        
+        return sorted;
     }
     
-    class MoveAndState {
-        Move move;
-        State state;
+    class MoveAndGoldmineDistance implements Comparable<MoveAndGoldmineDistance>{
         
-        public MoveAndState(Move move, State state) {
+        Move move;
+        int distance;
+        
+        public MoveAndGoldmineDistance(Move move, int distance) {
             this.move = move;
-            this.state = state;
+            this.distance = distance;
+        }
+        
+        @Override
+        public int compareTo(MoveAndGoldmineDistance o) {
+            return this.distance - o.distance;
         }
     }
     

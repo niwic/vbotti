@@ -22,12 +22,16 @@ public enum Move {
     }
     
     public static boolean isOneMoveAway(GameState.Position pos1, GameState.Position pos2) {
+        return distance(pos1, pos2) == 1;
+    }
+    
+    public static int distance(GameState.Position pos1, GameState.Position pos2) {
         int xDiff = Math.abs(pos1.getX() - pos2.getX());
         int yDiff = Math.abs(pos1.getY() - pos2.getY());
         
         int moveDiff = xDiff + yDiff;
         
-        return moveDiff == 1;
+        return moveDiff;
     }
     
     public BotMove toBotMove() {
