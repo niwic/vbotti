@@ -47,6 +47,8 @@ public class GoldMine extends HasPosition implements Tile {
                 }
                 owner = hero.getId();
                 hero.setMineCount(hero.getMineCount() + 1);
+            } else {
+                hero.die(state.getMines());
             }
         }
     }

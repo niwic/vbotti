@@ -95,6 +95,26 @@ public class GoldMineTest {
     }
     
     @Test
+    public void checkOnMoveIntoNotOwnedDies() {
+        GameState.Hero me = GameStateGenerator.createHero(1, position);
+        GameState.Hero opponent = GameStateGenerator.createHero(2, position);
+        ArrayList<GameState.Hero> heroes = new ArrayList();
+        heroes.add(me);
+        heroes.add(opponent);
+        
+        State state = new State(GameStateGenerator.createGameState(heroes, me));
+        Hero hero = state.getMe();
+        hero.setLife(20);
+        hero.setMineCount(1);
+        
+        mine.setOwner(0);
+        mine.onMoveInto(state, hero);
+        
+        assertEquals(hero.getLife(), 0);
+        assertEquals(hero.getMineCount(), 0);
+    }
+    
+    @Test
     public void checkOnMoveIntoOwnedByNomad() {
         GameState.Hero me = GameStateGenerator.createHero(1, position);
         GameState.Hero opponent = GameStateGenerator.createHero(2, position);
