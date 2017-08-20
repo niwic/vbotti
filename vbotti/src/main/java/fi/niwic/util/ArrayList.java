@@ -7,6 +7,19 @@ import java.util.ListIterator;
 
 public class ArrayList<T> implements List<T> {
 
+    private int size;
+    private Object storage[];
+    
+    public ArrayList() {
+        storage = new Object[10];
+        size = 0;
+    }
+    
+    public ArrayList(T[] list) {
+        storage = list;
+        size = list.length;
+    }
+    
     @Override
     public boolean isEmpty() {
         return size == 0;
@@ -24,12 +37,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        return storage;
+        Object array[] = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = storage[i];
+        }
+        return array;
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return a;
+        return (T[]) toArray();
     }
 
     @Override
@@ -158,14 +175,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private int size;
-    private Object storage[];
-    
-    public ArrayList() {
-        storage = new Object[10];
-        size = 0;
     }
     
     public boolean add(T object) {

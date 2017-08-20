@@ -6,6 +6,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.vbotti.lib.Move;
 import fi.niwic.vbotti.lib.State;
 import fi.niwic.util.ArrayList;
+import fi.niwic.util.InsertionSort;
 import java.util.Collections;
 
 public class AlphaBetaBot implements SimpleBot {
@@ -26,19 +27,19 @@ public class AlphaBetaBot implements SimpleBot {
         int best = Integer.MIN_VALUE;
         MoveAndGoldmineDistance bestMove = possibleMoves.get(0);
         for (MoveAndGoldmineDistance move : possibleMoves) {
-            State mutatedState = state.move(state.getMe().getId(), move.move);
+            State mutatedState = state.move(state.getMe().getId(), move.getMove());
             int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 0, best, Integer.MAX_VALUE);
-            System.out.println("Alternative move: " + move.move + " result: " + result + " gold mine distance: " + move.distance);
+            System.out.println("Alternative move: " + move.getMove() + " result: " + result + " gold mine distance: " + move.getDistance());
             if (result > best) {
                 best = result;
                 bestMove = move;
             }
         }
         
-        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove.move);
+        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove.getMove());
         System.out.println();
         
-        return bestMove.move;
+        return bestMove.getMove();
     }
 
     @Override
@@ -63,7 +64,7 @@ public class AlphaBetaBot implements SimpleBot {
             ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, heroId, false);
             if (heroId == state.getMe().getId()) {
                 for (MoveAndGoldmineDistance move : possibleMoves) {
-                    State mutatedState = state.move(heroId, move.move);
+                    State mutatedState = state.move(heroId, move.getMove());
                     int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
                     if (result >= beta) {
                         return beta;
@@ -76,7 +77,7 @@ public class AlphaBetaBot implements SimpleBot {
                 return alpha;
             } else {
                 for (MoveAndGoldmineDistance move : possibleMoves) {
-                    State mutatedState = state.move(heroId, move.move);
+                    State mutatedState = state.move(heroId, move.getMove());
                     int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
                     if (result <= alpha) {
                         return alpha;
@@ -127,31 +128,11 @@ public class AlphaBetaBot implements SimpleBot {
             }
         }
         
-        java.util.ArrayList sortable = new java.util.ArrayList(possibleMoves);
         if (sortByDistance) {
-            Collections.sort(sortable);
+            InsertionSort.sort(possibleMoves);
         }
         
-        ArrayList sorted = new ArrayList();
-        sorted.addAll(sortable);
-        
-        return sorted;
+        return possibleMoves;
     }
-    
-    class MoveAndGoldmineDistance implements Comparable<MoveAndGoldmineDistance>{
         
-        Move move;
-        int distance;
-        
-        public MoveAndGoldmineDistance(Move move, int distance) {
-            this.move = move;
-            this.distance = distance;
-        }
-        
-        @Override
-        public int compareTo(MoveAndGoldmineDistance o) {
-            return this.distance - o.distance;
-        }
-    }
-    
 }

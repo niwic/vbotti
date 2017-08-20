@@ -11,9 +11,9 @@ import java.util.ArrayDeque;
  */
 public class Board {
     
-    private int size;
-    private Tile[][] board;
-    private ArrayList<GoldMine> mines;
+    final private int size;
+    final private Tile[][] board;
+    final private ArrayList<GoldMine> mines;
     
     /**
      * Parsii peliklientin luokasta kenttä ja pelitilanne.
@@ -40,17 +40,22 @@ public class Board {
                     break;
                 case '$':
                     char owner = board.getTiles().charAt(i + 1);
+                    GoldMine mine;
                     if (owner == '-') {
-                        this.mines.add(new GoldMine(new GameState.Position(x, y)));
+                        mine = new GoldMine(new GameState.Position(x, y));
                     } else {
-                        this.mines.add(new GoldMine(new GameState.Position(x, y), Character.getNumericValue(owner)));
+                        mine = new GoldMine(new GameState.Position(x, y), Character.getNumericValue(owner));
                     }
+                    this.board[x][y] = new MinePointer(this.mines.size());
+                    this.mines.add(mine);
+                    break;
                 default:
                     this.board[x][y] = new Free();
                     break;
             }
         }
     }
+    
     
     private Board(int size, Tile[][] board, ArrayList<GoldMine> mines) {
         this.size = size;
@@ -61,7 +66,7 @@ public class Board {
     public Board copy() {
         ArrayList<GoldMine> newMines = new ArrayList();
         for (GoldMine oldMine : mines) {
-            newMines.add(new GoldMine(oldMine.position, oldMine.getOwner()));
+            newMines.add(new GoldMine(oldMine.getPosition(), oldMine.getOwner()));
         }
         
         return new Board(this.size, this.board, newMines);
@@ -72,25 +77,12 @@ public class Board {
             return new ImpassableWood();
         }
         
-        if (board[position.getX()][position.getY()] instanceof Free) {
-            int mine = getGoldMine(position);
-            if (mine > -1) return mines.get(mine);
-            
-            return board[position.getX()][position.getY()];
-        } else {
-            return board[position.getX()][position.getY()];
-        }
-    }
-    
-    private int getGoldMine(GameState.Position position) {
-        for (int i = 0; i < mines.size(); i++) {
-            GoldMine mine = mines.get(i);
-            if (mine.atPosition(position)) {
-                return i;
-            }
+        if (board[position.getX()][position.getY()] instanceof MinePointer) {
+            MinePointer pointer = (MinePointer) board[position.getX()][position.getY()];
+            return mines.get(pointer.pos);
         }
         
-        return -1;
+        return board[position.getX()][position.getY()];
     }
     
     /**

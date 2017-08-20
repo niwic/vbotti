@@ -28,7 +28,9 @@ public class BoardTest {
     public void checkCopy() {
         Board copyBoard = board.copy();
         for (int i = 0; i < board.getMines().size(); i++) {
-            assertNotEquals(board.getMines().get(i), copyBoard.getMines().get(i));
+            GoldMine copyMine = copyBoard.getMines().get(i);
+            assertNotEquals(board.getMines().get(i), copyMine);
+            assertEquals(copyBoard.getMines().get(i), copyBoard.getTile(copyMine.getPosition()));
         }
     }
     

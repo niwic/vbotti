@@ -50,10 +50,12 @@
                 <configuration>
                     <timestampedReports>false</timestampedReports>
                     <targetClasses>
+                        <param>fi.niwic.util.*</param>
                         <param>fi.niwic.vbotti.bot.*</param>
                         <param>fi.niwic.vbotti.lib.*</param>
                     </targetClasses>
                     <targetTests>
+                        <param>fi.niwic.util.*</param>
                         <param>fi.niwic.vbotti.bot.*</param>
                         <param>fi.niwic.vbotti.lib.*</param>
                     </targetTests>
