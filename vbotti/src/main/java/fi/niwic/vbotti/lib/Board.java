@@ -2,7 +2,7 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.ArrayList;
-import java.util.ArrayDeque;
+import fi.niwic.util.Queue;
 
 /**
  * Pelikenttää ja tilannetta kuvaava luokka.
@@ -182,26 +182,26 @@ public class Board {
         return goldMine.isOwnedBy(heroId);
     }
     
-    public int distanceToClosestGoldMineFrom(GameState.Position from, int heroId) {
-        int closest = Integer.MAX_VALUE;
-        for (GoldMine mine: mines) {
-            if (!mine.isOwnedBy(heroId)) {
-                int distance = Move.distance(from, mine.getPosition());
-                if (distance < closest) {
-                    closest = distance;
-                }
-            }
-        }
-        
-        return closest;
-    }
-    
+    /**
+     * Palautta reitin pituuden lähimpään kultakaivokseen joka ei ole pelaajan.
+     * 
+     * Algoritmi on breadth-first-search (BFS) tyyppinen ja käyttää apunaan jonoa.
+     * Jonon tilavaativuus on O(N) jossa n on pelikentän kaikki ruudut. Tämä on
+     * myös BFS algoritmin tilavaativuus.
+     * 
+     * BFS algoritmin aikiavaativuus pahimmassa tapauksessa on myös O(N) missä
+     * n on kaikki pelikentän ruudut.
+     * 
+     * @param from mistä lähdetään etsimään
+     * @param heroId minkä pelaajan omistuksessa kaivos ei saa olla
+     * @return pituus lähimpään kultakaivokseen
+     */
     public int distanceToClosestGoldMineFromBFS(GameState.Position from, int heroId) {
         
         boolean seen[][] = new boolean[board.length][board[0].length];
         int distance[][] = new int[board.length][board[0].length];
      
-        ArrayDeque<GameState.Position> queue = new ArrayDeque();
+        Queue<GameState.Position> queue = new Queue(board.length * board[0].length);
         queue.add(from);
         
         while (!queue.isEmpty()) {

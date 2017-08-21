@@ -7,7 +7,6 @@ import fi.niwic.vbotti.lib.Move;
 import fi.niwic.vbotti.lib.State;
 import fi.niwic.util.ArrayList;
 import fi.niwic.util.InsertionSort;
-import java.util.Collections;
 
 public class AlphaBetaBot implements SimpleBot {
 
