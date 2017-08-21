@@ -103,7 +103,7 @@ public class AlphaBetaBot implements SimpleBot {
         GameState.Position currentPosition = state.getHeroes()[heroId].getPosition();
         int closestGoldMine = 0;
         if (sortByDistance) {
-            closestGoldMine = state.getBoard().distanceToClosestGoldMineFromBFS(currentPosition, heroId);
+            closestGoldMine = state.getBoard().distanceToClosestGoldMineFrom(currentPosition, heroId);
         }
         possibleMoves.add(
                 new MoveAndGoldmineDistance(
@@ -120,7 +120,7 @@ public class AlphaBetaBot implements SimpleBot {
                         && !state.getBoard().isHeroGoldMine(destination, heroId)) {
                     closestGoldMine = 0;
                     if (sortByDistance) {
-                        closestGoldMine = state.getBoard().distanceToClosestGoldMineFromBFS(destination, heroId);
+                        closestGoldMine = state.getBoard().distanceToClosestGoldMineFrom(destination, heroId);
                     }
                     possibleMoves.add(new MoveAndGoldmineDistance(move, closestGoldMine));
                 }

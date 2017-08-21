@@ -196,7 +196,7 @@ public class Board {
      * @param heroId minkä pelaajan omistuksessa kaivos ei saa olla
      * @return pituus lähimpään kultakaivokseen
      */
-    public int distanceToClosestGoldMineFromBFS(GameState.Position from, int heroId) {
+    public int distanceToClosestGoldMineFrom(GameState.Position from, int heroId) {
         
         boolean seen[][] = new boolean[board.length][board[0].length];
         int distance[][] = new int[board.length][board[0].length];

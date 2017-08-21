@@ -163,4 +163,30 @@ public class BoardTest {
         }
     }
     
+    @Test
+    public void checkDistanceToClosestGoldMineFromX7Y1() {
+        GameState.Position from = new GameState.Position(1, 7);
+        assertEquals(4, board.distanceToClosestGoldMineFrom(from, 0));
+    }
+    
+    @Test
+    public void checkDistanceToClosestGoldMineFromX8Y1() {
+        GameState.Position from = new GameState.Position(1, 8);
+        assertEquals(3, board.distanceToClosestGoldMineFrom(from, 0));
+    }
+    
+    @Test
+    public void checkDistanceToClosestGoldMineFromX8Y1NotOwnedBy4() {
+        GameState.Position from = new GameState.Position(1, 8);
+        assertEquals(18, board.distanceToClosestGoldMineFrom(from, 4));
+    }
+    
+    @Test
+    public void checkDistanceToClosestGoldMineMaxValue() {
+        GameState.Board gsb = TestBoardTwo.getBoard();
+        Board boardTwo = new Board(gsb);
+        GameState.Position from = new GameState.Position(0, 0);
+        assertEquals(Integer.MAX_VALUE, boardTwo.distanceToClosestGoldMineFrom(from, 0));
+    }
+    
 }
