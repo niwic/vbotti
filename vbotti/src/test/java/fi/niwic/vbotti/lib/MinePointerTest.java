@@ -28,7 +28,7 @@ public class MinePointerTest {
     @Test
     public void checkOnMoveInto() {
         State state = new State(GameStateGenerator.createGameState());
-        GoldMine mine = new GoldMine(new GameState.Position(1,1));
+        GoldMine mine = new GoldMine(0, new GameState.Position(1,1));
         state.getMines().add(mine);
         
         mp.onMoveInto(state, state.getMe());

@@ -146,14 +146,14 @@ public class BoardTest {
     @Test
     public void checkGetMines() {
         ArrayList<GoldMine> mines = new ArrayList();
-        mines.add(new GoldMine(new GameState.Position(3,7), 4));
-        mines.add(new GoldMine(new GameState.Position(3,10), 4));
-        mines.add(new GoldMine(new GameState.Position(8,7), 4));
-        mines.add(new GoldMine(new GameState.Position(8,10), 4));
-        mines.add(new GoldMine(new GameState.Position(9,7), 4));
-        mines.add(new GoldMine(new GameState.Position(9,10), 4));
-        mines.add(new GoldMine(new GameState.Position(14,7), 0));
-        mines.add(new GoldMine(new GameState.Position(14,10), 0));
+        mines.add(new GoldMine(0, new GameState.Position(3,7), 4));
+        mines.add(new GoldMine(0, new GameState.Position(3,10), 4));
+        mines.add(new GoldMine(0, new GameState.Position(8,7), 4));
+        mines.add(new GoldMine(0, new GameState.Position(8,10), 4));
+        mines.add(new GoldMine(0, new GameState.Position(9,7), 4));
+        mines.add(new GoldMine(0, new GameState.Position(9,10), 4));
+        mines.add(new GoldMine(0, new GameState.Position(14,7), 0));
+        mines.add(new GoldMine(0, new GameState.Position(14,10), 0));
         
         for (int i = 0; i < board.getMines().size(); i++) {
             GoldMine mine1 = board.getMines().get(i);
@@ -166,13 +166,13 @@ public class BoardTest {
     @Test
     public void checkDistanceToClosestGoldMineFromX7Y1() {
         GameState.Position from = new GameState.Position(1, 7);
-        assertEquals(4, board.distanceToClosestGoldMineFrom(from, 0));
+        assertEquals(6, board.distanceToClosestGoldMineFrom(from, 0));
     }
     
     @Test
     public void checkDistanceToClosestGoldMineFromX8Y1() {
         GameState.Position from = new GameState.Position(1, 8);
-        assertEquals(3, board.distanceToClosestGoldMineFrom(from, 0));
+        assertEquals(5, board.distanceToClosestGoldMineFrom(from, 0));
     }
     
     @Test

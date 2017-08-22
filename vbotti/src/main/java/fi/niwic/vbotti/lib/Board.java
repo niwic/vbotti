@@ -42,9 +42,9 @@ public class Board {
                     char owner = board.getTiles().charAt(i + 1);
                     GoldMine mine;
                     if (owner == '-') {
-                        mine = new GoldMine(new GameState.Position(x, y));
+                        mine = new GoldMine(size, new GameState.Position(x, y));
                     } else {
-                        mine = new GoldMine(new GameState.Position(x, y), Character.getNumericValue(owner));
+                        mine = new GoldMine(size, new GameState.Position(x, y), Character.getNumericValue(owner));
                     }
                     this.board[x][y] = new MinePointer(this.mines.size());
                     this.mines.add(mine);
@@ -54,6 +54,8 @@ public class Board {
                     break;
             }
         }
+        
+        PathFinder.calculateDistancesToGoldMines(this);
     }
     
     
@@ -66,7 +68,7 @@ public class Board {
     public Board copy() {
         ArrayList<GoldMine> newMines = new ArrayList();
         for (GoldMine oldMine : mines) {
-            newMines.add(new GoldMine(oldMine.getPosition(), oldMine.getOwner()));
+            newMines.add(new GoldMine(oldMine.getPosition(), oldMine.getOwner(), oldMine.distances));
         }
         
         return new Board(this.size, this.board, newMines);
@@ -183,51 +185,45 @@ public class Board {
     }
     
     /**
+     * Onko pelikentässä tyhjä ruutu?
+     * 
+     * @param position missä
+     * @return onko tyhjä?
+     */
+    public boolean isFree(GameState.Position position) {
+        return (getTile(position) instanceof Free);
+    }
+    
+    /**
+     * Onko kyseessä kiinnostava paikka?
+     * 
+     * @param position missä
+     * @return onko kiinnostava?
+     */
+    public boolean isPOI(GameState.Position position) {
+        return (getTile(position) instanceof POI);
+    }
+    
+    /**
      * Palautta reitin pituuden lähimpään kultakaivokseen joka ei ole pelaajan.
      * 
-     * Algoritmi on breadth-first-search (BFS) tyyppinen ja käyttää apunaan jonoa.
-     * Jonon tilavaativuus on O(N) jossa n on pelikentän kaikki ruudut. Tämä on
-     * myös BFS algoritmin tilavaativuus.
-     * 
-     * BFS algoritmin aikiavaativuus pahimmassa tapauksessa on myös O(N) missä
-     * n on kaikki pelikentän ruudut.
+     * Metodin aikavaativuus on O(G) missä G on kultakaivosten lukumäärä.
      * 
      * @param from mistä lähdetään etsimään
      * @param heroId minkä pelaajan omistuksessa kaivos ei saa olla
      * @return pituus lähimpään kultakaivokseen
      */
     public int distanceToClosestGoldMineFrom(GameState.Position from, int heroId) {
-        
-        boolean seen[][] = new boolean[board.length][board[0].length];
-        int distance[][] = new int[board.length][board[0].length];
-     
-        Queue<GameState.Position> queue = new Queue(board.length * board[0].length);
-        queue.add(from);
-        
-        while (!queue.isEmpty()) {
-            GameState.Position current = queue.poll();
-            seen[current.getY()][current.getX()] = true;
-            
-            GameState.Position moves[] = new GameState.Position[] {
-                Move.STAY.from(current),Move.UP.from(current),Move.DOWN.from(current),
-                Move.LEFT.from(current),Move.RIGHT.from(current)
-            };
-            
-            for (GameState.Position position : moves) {
-                if (isGoldMine(position)) {
-                    GoldMine mine = (GoldMine) getTile(position);
-                    if (!mine.isOwnedBy(heroId)) {
-                        return distance[current.getY()][current.getX()] + 1;
-                    }
-                } else if (isMovePossible(position) && !seen[position.getY()][position.getX()]) {
-                    seen[position.getY()][position.getX()] = true;
-                    queue.add(position);
-                    distance[position.getY()][position.getX()] = distance[current.getY()][current.getX()] + 1;
+        int minDistance = Integer.MAX_VALUE;
+        for (GoldMine mine : mines) {
+            if (!mine.isOwnedBy(heroId)) {
+                if (mine.getDistance(from) < minDistance) {
+                    minDistance = mine.getDistance(from);
                 }
             }
         }
         
-        return Integer.MAX_VALUE;
+        return minDistance;
     }
     
 }

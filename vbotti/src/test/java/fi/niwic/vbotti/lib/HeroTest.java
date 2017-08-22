@@ -132,7 +132,7 @@ public class HeroTest {
     
     @Test
     public void checkDie() {
-        GoldMine mine = new GoldMine(position, hero.getId());
+        GoldMine mine = new GoldMine(0, position, hero.getId());
         ArrayList<GoldMine> mines = new ArrayList();
         mines.add(mine);
         
@@ -146,7 +146,7 @@ public class HeroTest {
     public void checkDieInFight() {
         Hero opponent = new Hero(2, 100, 3, 0, position, position);
         
-        GoldMine mine = new GoldMine(position, hero.getId());
+        GoldMine mine = new GoldMine(0, position, hero.getId());
         ArrayList<GoldMine> mines = new ArrayList();
         mines.add(mine);
         

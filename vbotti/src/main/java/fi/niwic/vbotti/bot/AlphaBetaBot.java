@@ -10,7 +10,7 @@ import fi.niwic.util.InsertionSort;
 
 public class AlphaBetaBot implements SimpleBot {
 
-    private final int maxDepth = 11;
+    private final int maxDepth = 12;
     
     @Override
     public BotMove move(GameState gs) {
@@ -60,7 +60,7 @@ public class AlphaBetaBot implements SimpleBot {
         if (state.isFinished() || depth > maxDepth) {
             return state.getResult();
         } else {
-            ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, heroId, false);
+            ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, heroId, true);
             if (heroId == state.getMe().getId()) {
                 for (MoveAndGoldmineDistance move : possibleMoves) {
                     State mutatedState = state.move(heroId, move.getMove());

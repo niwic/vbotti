@@ -16,7 +16,7 @@ public class GoldMineTest {
     @Before
     public void setUp() {
         position = new GameState.Position(4,9);
-        mine = new GoldMine(position, 1);
+        mine = new GoldMine(0, position, 1);
     }
     
     @Test

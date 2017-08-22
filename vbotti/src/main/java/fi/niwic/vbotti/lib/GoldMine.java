@@ -2,18 +2,24 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 
-public class GoldMine extends HasPosition implements Tile {
+public class GoldMine extends POI implements Tile {
 
     private int owner;
 
-    public GoldMine(GameState.Position position) {
-        this.owner = 0;
-        this.position = position;
+    public GoldMine(int boardSize, GameState.Position position) {
+        this(boardSize, position, 0);
     }
 
-    public GoldMine(GameState.Position position, int owner) {
+    public GoldMine(int boardSize, GameState.Position position, int owner) {
         this.owner = owner;
         this.position = position;
+        this.distances = new Integer[boardSize][boardSize];
+    }
+    
+    public GoldMine(GameState.Position position, int owner, Integer[][] distances) {
+        this.owner = owner;
+        this.position = position;
+        this.distances = distances;
     }
     
     public void setOwner(int id) {
@@ -31,7 +37,7 @@ public class GoldMine extends HasPosition implements Tile {
     public int getOwner() {
         return owner;
     }
-
+    
     @Override
     public boolean isMovePossible() {
         return false;
