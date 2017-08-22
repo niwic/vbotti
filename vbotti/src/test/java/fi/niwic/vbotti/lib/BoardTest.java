@@ -166,13 +166,13 @@ public class BoardTest {
     @Test
     public void checkDistanceToClosestGoldMineFromX7Y1() {
         GameState.Position from = new GameState.Position(1, 7);
-        assertEquals(6, board.distanceToClosestGoldMineFrom(from, 0));
+        assertEquals(4, board.distanceToClosestGoldMineFrom(from, 0));
     }
     
     @Test
     public void checkDistanceToClosestGoldMineFromX8Y1() {
         GameState.Position from = new GameState.Position(1, 8);
-        assertEquals(5, board.distanceToClosestGoldMineFrom(from, 0));
+        assertEquals(3, board.distanceToClosestGoldMineFrom(from, 0));
     }
     
     @Test

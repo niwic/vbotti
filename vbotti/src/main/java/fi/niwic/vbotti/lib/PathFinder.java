@@ -45,13 +45,16 @@ public class PathFinder {
                         };
 
                         for (GameState.Position position : moves) {
-                            if (board.isPOI(position)) {
-                                POI poi = (POI) board.getTile(position);
-                                poi.setDistance(from, distance[current.getY()][current.getX()] + 1);
-                            } else if (board.isMovePossible(position) && !seen[position.getY()][position.getX()]) {
+                            if (board.isInsideBoard(position) && !seen[position.getY()][position.getX()]) {
                                 seen[position.getY()][position.getX()] = true;
-                                queue.add(position);
                                 distance[position.getY()][position.getX()] = distance[current.getY()][current.getX()] + 1;
+                                
+                                if (board.isPOI(position)) {
+                                    POI poi = (POI) board.getTile(position);
+                                    poi.setDistance(from, distance[position.getY()][position.getX()]);
+                                } else if (board.isMovePossible(position)) {
+                                    queue.add(position);
+                                }
                             }
                         }
                     }
