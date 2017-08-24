@@ -8,4 +8,4 @@ Yksi tapa virittää alpha-beta algoritmi, on yrittää arvata mikä paras siirt
 
 Botti etenee nyt määrätietoisesti kohti lähintä kultakaivosta, varoen ettei muut pelaajat sitä tapa. Se myös tappaa pelaajan jos se pystyy ja kohdepelaajalla on kaivoksia. Nyt kuitenkin vaikuttaa siltä, että se ei koskaan pidä arvokkaan käydä tavernassa, vaikka hp on niin alhainen, ettei se pysty valtaamaan kaivosta. Pitäisi siis vielä virittää botti niin, että se myös tajuaa käydä tavernassa vaikka se lyhyellä tähtäimellä merkitseekin kahden kullan menettämistä.
 
-On myös tarkoitus vielä lisätä puuttuvat testit AlphaBetaBot luokalle, sekä puuttuvia javadoc kommenttejä paikoittain. Myös mahdolliset checkstyle virheet pitäisi vielä tarkistaa, sekä viimeistellä toteutusdokumentaatio viimeisimmillä muutoksilla & lisätä käyttöohje.
+On myös tarkoitus vielä siistiä AlphaBetaBot luokka lisätä toiminnallisuudelle puuttuvat testit. Mahdolliset checkstyle virheet pitäisi myös vielä tarkistaa. Dokumentaation suhteen olisi tarkoitus lisätä vielä puuttuvia javadoc kommenttejä paikoittain, sekä viimeistellä toteutusdokumentaatio viimeisimmillä muutoksilla & lisätä käyttöohje.
