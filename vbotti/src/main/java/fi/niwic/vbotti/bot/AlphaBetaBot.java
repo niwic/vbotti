@@ -10,7 +10,7 @@ import fi.niwic.util.InsertionSort;
 
 public class AlphaBetaBot implements SimpleBot {
 
-    private final int maxDepth = 12;
+    private final int maxDepth = 11;
     
     @Override
     public BotMove move(GameState gs) {

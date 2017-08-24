@@ -1,5 +1,9 @@
 package fi.niwic.util;
 
+// Näistä ei ole mitään toiminnallisuutta käytössä. Nämä ovat tässä koska
+// implementoidaan java rajapinta List<T>. Implementaatio pitää olla rajapinnan
+// mukainen, koska testissä pelikenttän generoinnissa vaaditaan rajapinnan
+// mukainen lista.
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;

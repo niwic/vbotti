@@ -2,7 +2,6 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.ArrayList;
-import fi.niwic.util.Queue;
 
 /**
  * Pelikenttää ja tilannetta kuvaava luokka.
