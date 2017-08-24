@@ -16,7 +16,7 @@ public class GoldMineTest {
     @Before
     public void setUp() {
         position = new GameState.Position(4,9);
-        mine = new GoldMine(0, position, 1);
+        mine = new GoldMine(1, position, 1);
     }
     
     @Test
@@ -50,6 +50,19 @@ public class GoldMineTest {
     @Test
     public void checkIsMovePossible() {
         assertFalse(mine.isMovePossible());
+    }
+    
+    @Test
+    public void checkDistance() {
+        GameState.Position from = new GameState.Position(0,0);
+        mine.setDistance(from, 5);
+        assertEquals(5, mine.getDistance(from));
+    }
+    
+    @Test
+    public void checkDistanceMaxValue() {
+        GameState.Position from = new GameState.Position(0,0);
+        assertEquals(Integer.MAX_VALUE, mine.getDistance(from));
     }
     
     @Test
