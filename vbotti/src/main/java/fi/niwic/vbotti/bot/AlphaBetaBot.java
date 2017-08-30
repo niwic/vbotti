@@ -9,10 +9,13 @@ import fi.niwic.util.ArrayList;
 import fi.niwic.util.InsertionSort;
 import fi.niwic.vbotti.lib.Board;
 import fi.niwic.vbotti.lib.Hero;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AlphaBetaBot implements SimpleBot {
 
-    private final int maxDepth = 11;
+    private Logger log = LogManager.getLogger(AlphaBetaBot.class);
+    private final int maxDepth = 8;
     
     @Override
     public BotMove move(GameState gs) {
@@ -22,30 +25,29 @@ public class AlphaBetaBot implements SimpleBot {
     
     public Move move(State state) {
         
-        System.out.println(state);
+        log.info(state);
         
         ArrayList<MoveAndPOIDistance> possibleMoves = getPossibleMoves(state, state.getMe().getId());
         int best = Integer.MIN_VALUE;
         MoveAndPOIDistance bestMove = possibleMoves.get(0);
         for (MoveAndPOIDistance move : possibleMoves) {
             State mutatedState = state.move(state.getMe().getId(), move.getMove());
-            int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 0, best, Integer.MAX_VALUE);
-            System.out.println("Alternative move: " + move.getMove() + " result: " + result + " gold mine distance: " + move.getDistance());
+            int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 1, best, Integer.MAX_VALUE);
+            log.info("Alternative move: " + move.getMove() + " result: " + result + " POI distance: " + move.getDistance());
             if (result > best) {
                 best = result;
                 bestMove = move;
             }
         }
         
-        System.out.println("Best move for turn " + state.getTurn() + " is " + bestMove.getMove());
-        System.out.println();
+        log.info("Best move for turn " + state.getTurn() + " is " + bestMove.getMove());
         
         return bestMove.getMove();
     }
 
     @Override
     public void setup() {
-        
+
     }
 
     @Override

@@ -29,16 +29,16 @@ public class Board {
         
         int max = size * size * 2;
         for (int i = 0; i < max; i+=2) {
-            int y = (i % (size * 2)) / 2;
             int x = i / (size * 2);
+            int y = (i % (size * 2)) / 2;
             char definition = board.getTiles().charAt(i);
             switch (definition) {
                 case '#':
-                    this.board[x][y] = new ImpassableWood();
+                    this.board[y][x] = new ImpassableWood();
                     break;
                 case '[':
                     Tavern tavern = new Tavern(size, new GameState.Position(x, y));
-                    this.board[x][y] = tavern;
+                    this.board[y][x] = tavern;
                     this.taverns.add(tavern);
                     break;
                 case '$':
@@ -49,11 +49,11 @@ public class Board {
                     } else {
                         mine = new GoldMine(size, new GameState.Position(x, y), Character.getNumericValue(owner));
                     }
-                    this.board[x][y] = new MinePointer(this.mines.size());
+                    this.board[y][x] = new MinePointer(this.mines.size());
                     this.mines.add(mine);
                     break;
                 default:
-                    this.board[x][y] = new Free();
+                    this.board[y][x] = new Free();
                     break;
             }
         }
@@ -83,12 +83,12 @@ public class Board {
             return new ImpassableWood();
         }
         
-        if (board[position.getX()][position.getY()] instanceof MinePointer) {
-            MinePointer pointer = (MinePointer) board[position.getX()][position.getY()];
+        if (board[position.getY()][position.getX()] instanceof MinePointer) {
+            MinePointer pointer = (MinePointer) board[position.getY()][position.getX()];
             return mines.get(pointer.pos);
         }
         
-        return board[position.getX()][position.getY()];
+        return board[position.getY()][position.getX()];
     }
     
     /**

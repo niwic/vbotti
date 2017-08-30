@@ -101,14 +101,7 @@ public class State {
      * @return pelin tulos
      */
     public int getResult() {
-        int bestOpponent = 0;
-        for (int i = 1; i < heroes.length; i++) {
-            if (i != me.getId() && heroes[i].getGold() > bestOpponent) {
-                bestOpponent = heroes[i].getGold();
-            }
-        }
-        
-        return me.getGold() - bestOpponent;
+        return me.getMineCount();
     }
     
     /**
@@ -259,7 +252,9 @@ public class State {
         
         for (int i = 1; i < heroes.length; i++) {
             sb.append(heroes[i].toString());
-            sb.append(System.lineSeparator());
+            if (i < heroes.length - 1) {
+                sb.append(System.lineSeparator());
+            }
         }
         
         return sb.toString();

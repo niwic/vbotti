@@ -2,9 +2,13 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.Queue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PathFinder {
 
+    private static Logger log = LogManager.getLogger(PathFinder.class);
+    
     /**
      * Laskee reittien pituuded jokaisesta vapaasta paikasta jokaiseen kultakaivokseen
      * 
@@ -20,6 +24,8 @@ public class PathFinder {
      * @param board pelikenttä joka parsitaan
      */
     public static void calculateDistancesToPOIS(Board board) {
+        
+        log.info("Starting pathfinding to POIs");
         
         for (int x = 0; x < board.getSize(); x++) {
             
@@ -64,6 +70,8 @@ public class PathFinder {
             }
         
         }
+        
+        log.info("Pathfinding done!");
         
     }
     

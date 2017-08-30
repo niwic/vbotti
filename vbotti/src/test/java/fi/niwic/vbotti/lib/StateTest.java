@@ -239,7 +239,7 @@ public class StateTest {
                 + "1@(0/7) life: 100 gold: 0 mines: 0" + System.lineSeparator()
                 + "2@(5/8) life: 100 gold: 0 mines: 1" + System.lineSeparator()
                 + "3@(6/9) life: 100 gold: 0 mines: 2" + System.lineSeparator()
-                + "4@(7/10) life: 100 gold: 0 mines: 3" + System.lineSeparator();
+                + "4@(7/10) life: 100 gold: 0 mines: 3";
         
         assertEquals(expected, state.toString());
     }
