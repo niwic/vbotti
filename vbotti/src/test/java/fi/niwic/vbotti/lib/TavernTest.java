@@ -1,5 +1,6 @@
 package fi.niwic.vbotti.lib;
 
+import com.brianstempin.vindiniumclient.dto.GameState;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
@@ -11,7 +12,7 @@ public class TavernTest {
     
     @Before
     public void setUp() {
-        tavern = new Tavern();
+        tavern = new Tavern(1, new GameState.Position(0, 0));
     }
     
     @Test

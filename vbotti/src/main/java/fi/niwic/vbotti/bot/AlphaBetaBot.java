@@ -7,6 +7,8 @@ import fi.niwic.vbotti.lib.Move;
 import fi.niwic.vbotti.lib.State;
 import fi.niwic.util.ArrayList;
 import fi.niwic.util.InsertionSort;
+import fi.niwic.vbotti.lib.Board;
+import fi.niwic.vbotti.lib.Hero;
 
 public class AlphaBetaBot implements SimpleBot {
 
@@ -22,10 +24,10 @@ public class AlphaBetaBot implements SimpleBot {
         
         System.out.println(state);
         
-        ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, state.getMe().getId(), true);
+        ArrayList<MoveAndPOIDistance> possibleMoves = getPossibleMoves(state, state.getMe().getId());
         int best = Integer.MIN_VALUE;
-        MoveAndGoldmineDistance bestMove = possibleMoves.get(0);
-        for (MoveAndGoldmineDistance move : possibleMoves) {
+        MoveAndPOIDistance bestMove = possibleMoves.get(0);
+        for (MoveAndPOIDistance move : possibleMoves) {
             State mutatedState = state.move(state.getMe().getId(), move.getMove());
             int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 0, best, Integer.MAX_VALUE);
             System.out.println("Alternative move: " + move.getMove() + " result: " + result + " gold mine distance: " + move.getDistance());
@@ -50,19 +52,15 @@ public class AlphaBetaBot implements SimpleBot {
     public void shutdown() {
         
     }
-
-    public int turn(State state, int heroId) {
-        return turn(state, heroId, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }
     
-    public int turn(State state, int heroId, int depth, int alpha, int beta) {
+    private int turn(State state, int heroId, int depth, int alpha, int beta) {
         
         if (state.isFinished() || depth > maxDepth) {
             return state.getResult();
         } else {
-            ArrayList<MoveAndGoldmineDistance> possibleMoves = getPossibleMoves(state, heroId, true);
+            ArrayList<MoveAndPOIDistance> possibleMoves = getPossibleMoves(state, heroId);
             if (heroId == state.getMe().getId()) {
-                for (MoveAndGoldmineDistance move : possibleMoves) {
+                for (MoveAndPOIDistance move : possibleMoves) {
                     State mutatedState = state.move(heroId, move.getMove());
                     int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
                     if (result >= beta) {
@@ -75,7 +73,7 @@ public class AlphaBetaBot implements SimpleBot {
                 
                 return alpha;
             } else {
-                for (MoveAndGoldmineDistance move : possibleMoves) {
+                for (MoveAndPOIDistance move : possibleMoves) {
                     State mutatedState = state.move(heroId, move.getMove());
                     int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
                     if (result <= alpha) {
@@ -97,41 +95,69 @@ public class AlphaBetaBot implements SimpleBot {
         else return 1;
     }
     
-    private ArrayList<MoveAndGoldmineDistance> getPossibleMoves(State state, int heroId, boolean sortByDistance) {
-        ArrayList<MoveAndGoldmineDistance> possibleMoves = new ArrayList();
+    private ArrayList<MoveAndPOIDistance> getPossibleMoves(State state, int heroId) {
+        ArrayList<MoveAndPOIDistance> possibleMoves = new ArrayList();
         
-        GameState.Position currentPosition = state.getHeroes()[heroId].getPosition();
-        int closestGoldMine = 0;
-        if (sortByDistance) {
-            closestGoldMine = state.getBoard().distanceToClosestGoldMineFrom(currentPosition, heroId);
-        }
+        Board board = state.getBoard();
+        Hero hero = state.getHeroes()[heroId];
+        GameState.Position currentPosition = hero.getPosition();
+        
         possibleMoves.add(
-                new MoveAndGoldmineDistance(
+                new MoveAndPOIDistance(
                         Move.STAY,
-                        closestGoldMine
+                        goldMineOrTavernDistance(hero, currentPosition, board)
                 )
         );
         
         for (Move move : Move.values()) {
             if (move != Move.STAY) {
                 GameState.Position destination = move.from(currentPosition);
-                if (state.getBoard().isInsideBoard(destination)
-                        && !state.getBoard().isImpassableWood(destination)
-                        && !state.getBoard().isHeroGoldMine(destination, heroId)) {
-                    closestGoldMine = 0;
-                    if (sortByDistance) {
-                        closestGoldMine = state.getBoard().distanceToClosestGoldMineFrom(destination, heroId);
-                    }
-                    possibleMoves.add(new MoveAndGoldmineDistance(move, closestGoldMine));
+                if (isDestinationSensible(board, destination, heroId)) {
+                    possibleMoves.add(
+                            new MoveAndPOIDistance(
+                                    move,
+                                    goldMineOrTavernDistance(hero, destination, board)
+                            )
+                    );
                 }
             }
         }
         
-        if (sortByDistance) {
-            InsertionSort.sort(possibleMoves);
-        }
+        InsertionSort.sort(possibleMoves);
         
         return possibleMoves;
     }
-        
+    
+    /**
+     * Otetaan harkintaan vaan ne siirrot jotka oikeasti muuttavat pelitilanteen.
+     * 
+     * @param board pelikenttä
+     * @param destination kohderuutu
+     * @param heroId vuorossa
+     * @return otetaanko siirto pelipuuhun?
+     */
+    private boolean isDestinationSensible(Board board, GameState.Position destination, int heroId) {
+        return board.isInsideBoard(destination)
+                && !board.isImpassableWood(destination)
+                && !board.isHeroGoldMine(destination, heroId);
+    }
+    
+    /**
+     * Palauttaa etäisyyden lähimpään kohteeseen.
+     * 
+     * Jos on niin vähän hpta, että siiron jälkeen ei pysty kaviosta valtaamaan,
+     * otetaan etäisyys lähimpään tavernaan.
+     * 
+     * @param hero vuorossa
+     * @param destination kohderuutu
+     * @param board pelikenttä
+     * @return lyhyin etäysyys kiinnostavaan kohteeseen
+     */
+    private int goldMineOrTavernDistance(Hero hero, GameState.Position destination, Board board) {
+        if (hero.getLife() < 21) {
+            return board.distanceToClosestTavernFrom(destination);
+        } else {
+            return board.distanceToClosestGoldMineFrom(destination, hero.getId());
+        }
+    }
 }

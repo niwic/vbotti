@@ -1,6 +1,13 @@
 package fi.niwic.vbotti.lib;
 
-class Tavern implements Tile {
+import com.brianstempin.vindiniumclient.dto.GameState;
+
+class Tavern extends POI implements Tile {
+    
+    public Tavern(int boardSize, GameState.Position position) {
+        this.position = position;
+        this.distances = new Integer[boardSize][boardSize];
+    }
     
     @Override
     public void onMoveInto(State state, Hero hero) {

@@ -12,7 +12,7 @@ public class PathFinderTest extends PathFinder {
     public void setUp() {
         GameState.Board gsb = TestBoardTwo.getBoard();
         board = new Board(gsb);
-        calculateDistancesToGoldMines(board);
+        calculateDistancesToPOIS(board);
     }
     
     @Test

@@ -19,7 +19,7 @@ public class PathFinder {
      * 
      * @param board pelikenttä joka parsitaan
      */
-    public static void calculateDistancesToGoldMines(Board board) {
+    public static void calculateDistancesToPOIS(Board board) {
         
         for (int x = 0; x < board.getSize(); x++) {
             

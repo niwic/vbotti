@@ -13,6 +13,7 @@ public class Board {
     final private int size;
     final private Tile[][] board;
     final private ArrayList<GoldMine> mines;
+    final private ArrayList<Tavern> taverns;
     
     /**
      * Parsii peliklientin luokasta kenttä ja pelitilanne.
@@ -24,6 +25,7 @@ public class Board {
         this.size = board.getSize();
         this.board = new Tile[size][size];
         this.mines = new ArrayList<>();
+        this.taverns = new ArrayList<>();
         
         int max = size * size * 2;
         for (int i = 0; i < max; i+=2) {
@@ -35,7 +37,9 @@ public class Board {
                     this.board[x][y] = new ImpassableWood();
                     break;
                 case '[':
-                    this.board[x][y] = new Tavern();
+                    Tavern tavern = new Tavern(size, new GameState.Position(x, y));
+                    this.board[x][y] = tavern;
+                    this.taverns.add(tavern);
                     break;
                 case '$':
                     char owner = board.getTiles().charAt(i + 1);
@@ -54,14 +58,15 @@ public class Board {
             }
         }
         
-        PathFinder.calculateDistancesToGoldMines(this);
+        PathFinder.calculateDistancesToPOIS(this);
     }
     
     
-    private Board(int size, Tile[][] board, ArrayList<GoldMine> mines) {
+    private Board(int size, Tile[][] board, ArrayList<GoldMine> mines, ArrayList<Tavern> taverns) {
         this.size = size;
         this.board = board;
         this.mines = mines;
+        this.taverns = taverns;
     }
     
     public Board copy() {
@@ -70,7 +75,7 @@ public class Board {
             newMines.add(new GoldMine(oldMine.getPosition(), oldMine.getOwner(), oldMine.distances));
         }
         
-        return new Board(this.size, this.board, newMines);
+        return new Board(this.size, this.board, newMines, taverns);
     }
     
     public Tile getTile(GameState.Position position) {
@@ -219,6 +224,25 @@ public class Board {
                 if (mine.getDistance(from) < minDistance) {
                     minDistance = mine.getDistance(from);
                 }
+            }
+        }
+        
+        return minDistance;
+    }
+    
+    /**
+     * Palauttaa reitin pituuden lähimpään tavernaan.
+     * 
+     * Metodin aikavaativuus on O(T) missä T on tavernojen lukumäärä.
+     * 
+     * @param from mistä lähdetään etsimään
+     * @return pituus lähimpään kultakaivokseen
+     */
+    public int distanceToClosestTavernFrom(GameState.Position from) {
+        int minDistance = Integer.MAX_VALUE;
+        for (Tavern tavern : taverns) {
+            if (tavern.getDistance(from) < minDistance) {
+                minDistance = tavern.getDistance(from);
             }
         }
         
