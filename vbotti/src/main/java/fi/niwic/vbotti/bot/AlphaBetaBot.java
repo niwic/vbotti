@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 public class AlphaBetaBot implements SimpleBot {
 
     private Logger log = LogManager.getLogger(AlphaBetaBot.class);
-    private final int maxDepth = 8;
+    private final int maxDepth = 11;
     
     @Override
     public BotMove move(GameState gs) {
