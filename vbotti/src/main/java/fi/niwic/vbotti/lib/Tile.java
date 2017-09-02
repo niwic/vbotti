@@ -14,6 +14,12 @@ public interface Tile {
      */
     public boolean isMovePossible();
     
+    /**
+     * Logiikka joka suoritetaan jos siirrytään tähän ruutuun.
+     * 
+     * @param state pelikentän tilanne
+     * @param hero hero joka siirtyy ruutuun
+     */
     public void onMoveInto(State state, Hero hero);
     
 }

@@ -14,11 +14,21 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private Object storage[];
     
+    /**
+     * Luo uuden ArrayList olion.
+     * 
+     * Tallennuskapasiteetti on aluksi 10.
+     */
     public ArrayList() {
         storage = new Object[10];
         size = 0;
     }
     
+    /**
+     * Käärii olemassa olevan taulukon ArrayList olioon.
+     * 
+     * @param list käärittävä taulukko
+     */
     public ArrayList(T[] list) {
         storage = list;
         size = list.length;
@@ -41,7 +51,7 @@ public class ArrayList<T> implements List<T> {
             storage[size] = object;
             size++;
         } else {
-            resize(storage.length*2);
+            resize(storage.length * 2);
             add(object);
         }
         

@@ -10,9 +10,24 @@ import java.security.InvalidParameterException;
 
 public class Main {
 
+    /**
+     * Käynnistää botin suorituksen.
+     * 
+     * Ensimmäisenä argumenttina pitää antaa vindinium avaimen jonka saa
+     * osoitteesta http://vindinium.org/register.
+     * 
+     * Toisena argumenttina voi antaa "COMPETITION", jolloin botti osallistuu
+     * oikeaan peliin. Muuten botti osallistuu harjoituspelin random-botteja
+     * vastaan.
+     * 
+     * @param args avain ja mahdollisesti "COMPETITION"
+     * @throws Exception mikä vaan poikkeus
+     */
     public static void main(String[] args) throws Exception {
         
-        if (args.length < 1) throw new InvalidParameterException("You must provide a key");
+        if (args.length < 1) {
+            throw new InvalidParameterException("You must provide a key");
+        }
         
         String key = args[0];
         String arena = "";
@@ -29,14 +44,15 @@ public class Main {
         runner.call();
     }
     
-    public static GenericUrl getGameUrl(String arena) {
-        if ("COMPETITION".equals(arena))
+    private static GenericUrl getGameUrl(String arena) {
+        if ("COMPETITION".equals(arena)) {
             return VindiniumUrl.getCompetitionUrl();
-        else
+        } else {
             return VindiniumUrl.getTrainingUrl();
+        }
     }
     
-    public static ApiKey getApiKey(String key) {
+    private static ApiKey getApiKey(String key) {
         return new ApiKey(key);
     }
     

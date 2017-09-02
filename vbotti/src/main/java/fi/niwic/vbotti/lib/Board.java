@@ -18,6 +18,17 @@ public class Board {
     /**
      * Parsii peliklientin luokasta kenttä ja pelitilanne.
      * 
+     * Kultakaivoksen tallennetaan "osoittimina", jotta pelikentän kopioiminen
+     * olisi helpompaa. Kultakaivoksessa on tieto kaivoksen omistajasta. Voidaan
+     * siis tällä tavalla kopioida vain kultakaivoslista, eikä tavitse kopioida
+     * koko pelikenttä kun pelitilanne mutatoituu.
+     * 
+     * Lopussa lasketaan myös etäisyydet jokaiseen kiinnostavaan kohteeseen,
+     * eli käytännössä jokaiseen kultakaivokseen ja tavernaan.
+     * 
+     * Algoritmin aikavaativuus on O(R + D) missä R on pelikentän ruutujen 
+     * lukumäärä, ja D on reitinhakualgoritmin aikavaativuus.
+     * 
      * @param board Klientin pelikenttä
      */
     public Board(GameState.Board board) {
@@ -28,7 +39,7 @@ public class Board {
         this.taverns = new ArrayList<>();
         
         int max = size * size * 2;
-        for (int i = 0; i < max; i+=2) {
+        for (int i = 0; i < max; i += 2) {
             int x = i / (size * 2);
             int y = (i % (size * 2)) / 2;
             char definition = board.getTiles().charAt(i);
@@ -61,7 +72,6 @@ public class Board {
         PathFinder.calculateDistancesToPOIS(this);
     }
     
-    
     private Board(int size, Tile[][] board, ArrayList<GoldMine> mines, ArrayList<Tavern> taverns) {
         this.size = size;
         this.board = board;
@@ -69,6 +79,14 @@ public class Board {
         this.taverns = taverns;
     }
     
+    /**
+     * Luodaan kopio pelikentästä.
+     * 
+     * Tässä kopioidaan kultakavokset, koska niissä on tieto kultakaivoksen
+     * omistajasta. Aikavaativuus on O(G) missä G on kultakaivosten lukumäärä.
+     * 
+     * @return kopio pelikentästä
+     */
     public Board copy() {
         ArrayList<GoldMine> newMines = new ArrayList();
         for (GoldMine oldMine : mines) {
@@ -78,6 +96,16 @@ public class Board {
         return new Board(this.size, this.board, newMines, taverns);
     }
     
+    /**
+     * Palauttaa tietyn pelikentän ruudun.
+     * 
+     * Jos ruutu on pelikentän ulkopuolella, palutetaan ImpassableWood. Jos 
+     * ruutu osoitin kultakaivokseen, palautetaan osoittimen indikoiva
+     * kultakaivos. Muuten palautetaan ruudun sisältö suoraan.
+     * 
+     * @param position mikä ruutu
+     * @return ruudun sisältö
+     */
     public Tile getTile(GameState.Position position) {
         if (!isInsideBoard(position)) {
             return new ImpassableWood();
@@ -116,7 +144,9 @@ public class Board {
      * @return kyllä/ei
      */
     public boolean isMovePossible(GameState.Position position) {
-        if (!isInsideBoard(position)) return false;
+        if (!isInsideBoard(position)) {
+            return false;
+        }
 
         return getTile(position).isMovePossible();
     }
@@ -127,8 +157,13 @@ public class Board {
      * @return onko kentällä?
      */
     public boolean isInsideBoard(GameState.Position position) {
-        if (position.getX() < 0 || position.getX() == size) return false;
-        if (position.getY() < 0 || position.getY() == size) return false;
+        if (position.getX() < 0 || position.getX() == size) {
+            return false;
+        }
+        
+        if (position.getY() < 0 || position.getY() == size) {
+            return false;
+        }
         
         return true;
     }
@@ -170,20 +205,26 @@ public class Board {
      * @return kyllä/ei
      */
     public boolean isFreeGoldMine(GameState.Position position) {
-        if (!isGoldMine(position)) return false;
-        GoldMine goldMine = (GoldMine) getTile(position);
-        return goldMine.isFree();
+        if (!isGoldMine(position)) {
+            return false;
+        } else {
+            GoldMine goldMine = (GoldMine) getTile(position);
+            return goldMine.isFree();
+        }
     }
     
     /**
      * Onko tässä paikassa pelaajan omistama kultakaivos?
      * 
-     * @param position Paikka paikka mitä tarkistaa
-     * @param hero Hero kyseessä oleva pelaaja
+     * @param position paikka mitä tarkistaa
+     * @param heroId kyseessä oleva pelaajan id
      * @return kyllä/ei
      */
     public boolean isHeroGoldMine(GameState.Position position, int heroId) {
-        if (!isGoldMine(position)) return false;
+        if (!isGoldMine(position)) {
+            return false;
+        }
+        
         GoldMine goldMine = (GoldMine) getTile(position);
         return goldMine.isOwnedBy(heroId);
     }

@@ -16,6 +16,11 @@ public class State {
     private Hero me;
     private Hero[] heroes;
     
+    /**
+     * Luo uuden representaation tilanteesta klientin antamasta pelitilanteesta.
+     * 
+     * @param gameState klientin pelitilanne
+     */
     public State(GameState gameState) {
         setHeroes(gameState);
         this.turn = gameState.getGame().getTurn();
@@ -114,8 +119,11 @@ public class State {
         Tile boardTile = board.getTile(position);
         if (boardTile instanceof Free) {
             int hero = getHero(position);
-            if (hero > 0) return heroes[hero];
-            else return boardTile;
+            if (hero > 0) {
+                return heroes[hero];
+            } else {
+                return boardTile;
+            }
         } else {
             return boardTile;
         }
@@ -128,7 +136,9 @@ public class State {
      */
     private int getHero(GameState.Position position) {
         for (int i = 1; i < heroes.length; i++) {
-            if (isHero(position, heroes[i])) return i;
+            if (isHero(position, heroes[i])) {
+                return i;
+            }
         }
         
         return 0;
@@ -148,6 +158,9 @@ public class State {
     /**
      * Palauttaa mutatoidun pelitilanteen, missä kyseinen hero on siirretty
      * pyydettyyn paikkaan. Ei muuta tätä pelitilannetta.
+     * 
+     * Tässä kopioidaan kaikki herot, sekä pelikenttä. Aikavaativuus on siis
+     * O(H) missä H on herojen lukumäärä.
      * 
      * @param heroId heron id joka siirretään
      * @param move suunta minne siirretään
@@ -240,6 +253,7 @@ public class State {
         }
     }
     
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Turn: ");

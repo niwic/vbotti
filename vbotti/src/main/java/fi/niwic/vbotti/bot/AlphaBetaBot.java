@@ -17,12 +17,25 @@ public class AlphaBetaBot implements SimpleBot {
     private Logger log = LogManager.getLogger(AlphaBetaBot.class);
     private final int maxDepth = 11;
     
+    /**
+     * Ottaa vastaan klientin pelitilanteen, ja palauttaa halutun klientin
+     * siirron.
+     * 
+     * @param gs pelitilanne
+     * @return haluttu siirto
+     */
     @Override
     public BotMove move(GameState gs) {
         State state = new State(gs);
         return move(state).toBotMove();
     }
     
+    /**
+     * Ottaa vastaan pelitilanteen, ja palauttaa halutun siirron.
+     * 
+     * @param state pelitilanne
+     * @return haluttu siirto
+     */
     public Move move(State state) {
         
         log.info(state);
@@ -45,11 +58,17 @@ public class AlphaBetaBot implements SimpleBot {
         return bestMove.getMove();
     }
 
+    /**
+     * Ei käytetä.
+     */
     @Override
     public void setup() {
 
     }
 
+    /**
+     * Ei käytetä.
+     */
     @Override
     public void shutdown() {
         
@@ -93,8 +112,11 @@ public class AlphaBetaBot implements SimpleBot {
     }
     
     private int nextHeroId(State state, int heroId) {
-        if (heroId + 1 < state.getHeroes().length) return heroId+1;
-        else return 1;
+        if (heroId + 1 < state.getHeroes().length) {
+            return heroId + 1;
+        } else {
+            return 1;
+        }
     }
     
     private ArrayList<MoveAndPOIDistance> getPossibleMoves(State state, int heroId) {

@@ -14,13 +14,12 @@ public class InsertionSortTest extends InsertionSort {
         MoveAndPOIDistance m3 = new MoveAndPOIDistance(Move.LEFT, 5);
         MoveAndPOIDistance m4 = new MoveAndPOIDistance(Move.RIGHT, 1);
         ArrayList<MoveAndPOIDistance> list = new ArrayList(new MoveAndPOIDistance[]{m1, m2, m3, m4});
-        ArrayList<MoveAndPOIDistance> retList = sort(list);
+        sort(list);
         
         assertEquals(m4, list.get(0));
         assertEquals(m2, list.get(1));
         assertEquals(m3, list.get(2));
         assertEquals(m1, list.get(3));
-        assertEquals(list, retList);
     }
     
 }
