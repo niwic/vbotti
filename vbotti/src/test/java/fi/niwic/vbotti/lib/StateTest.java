@@ -83,7 +83,7 @@ public class StateTest {
     @Test
     public void checkGetResult() {
         State afterMove = state.move(4, Move.STAY);
-        assertEquals(-3, afterMove.getResult());
+        assertEquals(0, afterMove.getResult());
     }
     
     @Test

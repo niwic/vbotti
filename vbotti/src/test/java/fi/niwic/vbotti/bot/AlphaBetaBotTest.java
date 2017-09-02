@@ -28,6 +28,7 @@ public class AlphaBetaBotTest {
         GameState gameState = GameStateGenerator.createGameState(heroes, me);
         Move move = bot.move(new State(gameState));
         
+        assertEquals(12, bot.getStatsForPreviousMove().getNodesChecked());
         assertEquals(Move.STAY, move);
     }
     
@@ -42,6 +43,7 @@ public class AlphaBetaBotTest {
         GameState gameState = GameStateGenerator.createGameState(heroes, me, TestBoardTwo.getBoard());
         Move move = bot.move(new State(gameState));
         
+        assertEquals(8043, bot.getStatsForPreviousMove().getNodesChecked());
         assertEquals(Move.DOWN, move);
     }
     

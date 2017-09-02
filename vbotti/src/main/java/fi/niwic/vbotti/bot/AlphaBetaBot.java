@@ -16,6 +16,7 @@ public class AlphaBetaBot implements SimpleBot {
 
     private Logger log = LogManager.getLogger(AlphaBetaBot.class);
     private final int maxDepth = 11;
+    private Stats stats;
     
     /**
      * Ottaa vastaan klientin pelitilanteen, ja palauttaa halutun klientin
@@ -40,10 +41,12 @@ public class AlphaBetaBot implements SimpleBot {
         
         log.info(state);
         
+        stats = new Stats((int) Math.pow(5, maxDepth));
         ArrayList<MoveAndPOIDistance> possibleMoves = getPossibleMoves(state, state.getMe().getId());
         int best = Integer.MIN_VALUE;
         MoveAndPOIDistance bestMove = possibleMoves.get(0);
         for (MoveAndPOIDistance move : possibleMoves) {
+            stats.increaseNodesChecked();
             State mutatedState = state.move(state.getMe().getId(), move.getMove());
             int result = turn(mutatedState, nextHeroId(mutatedState, state.getMe().getId()), 1, best, Integer.MAX_VALUE);
             log.info("Alternative move: " + move.getMove() + " result: " + result + " POI distance: " + move.getDistance());
@@ -54,24 +57,23 @@ public class AlphaBetaBot implements SimpleBot {
         }
         
         log.info("Best move for turn " + state.getTurn() + " is " + bestMove.getMove());
+        log.info("Nodes checked " + stats.getNodesChecked() + "/" + stats.getTreeNodes());
         
         return bestMove.getMove();
     }
 
-    /**
-     * Ei käytetä.
-     */
     @Override
     public void setup() {
 
     }
 
-    /**
-     * Ei käytetä.
-     */
     @Override
     public void shutdown() {
         
+    }
+    
+    public Stats getStatsForPreviousMove() {
+        return stats;
     }
     
     private int turn(State state, int heroId, int depth, int alpha, int beta) {
@@ -81,34 +83,44 @@ public class AlphaBetaBot implements SimpleBot {
         } else {
             ArrayList<MoveAndPOIDistance> possibleMoves = getPossibleMoves(state, heroId);
             if (heroId == state.getMe().getId()) {
-                for (MoveAndPOIDistance move : possibleMoves) {
-                    State mutatedState = state.move(heroId, move.getMove());
-                    int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
-                    if (result >= beta) {
-                        return beta;
-                    }
-                    if (result > alpha) {
-                        alpha = result;
-                    }
-                }
-                
-                return alpha;
+                return myTurn(state, possibleMoves, heroId, depth, alpha, beta);
             } else {
-                for (MoveAndPOIDistance move : possibleMoves) {
-                    State mutatedState = state.move(heroId, move.getMove());
-                    int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
-                    if (result <= alpha) {
-                        return alpha;
-                    }
-                    if (result < beta) {
-                        beta = result;
-                    }
-                }
-                
-                return beta;
+                return opponentTurn(state, possibleMoves, heroId, depth, alpha, beta);
             }
         }
         
+    }
+    
+    private int myTurn(State state, ArrayList<MoveAndPOIDistance> possibleMoves, int heroId, int depth, int alpha, int beta) {
+        for (MoveAndPOIDistance move : possibleMoves) {
+            stats.increaseNodesChecked();
+            State mutatedState = state.move(heroId, move.getMove());
+            int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
+            if (result >= beta) {
+                return beta;
+            }
+            if (result > alpha) {
+                alpha = result;
+            }
+        }
+
+        return alpha;
+    }
+    
+    private int opponentTurn(State state, ArrayList<MoveAndPOIDistance> possibleMoves, int heroId, int depth, int alpha, int beta) {
+        for (MoveAndPOIDistance move : possibleMoves) {
+            stats.increaseNodesChecked();
+            State mutatedState = state.move(heroId, move.getMove());
+            int result = turn(mutatedState, nextHeroId(state, heroId), depth + 1, alpha, beta);
+            if (result <= alpha) {
+                return alpha;
+            }
+            if (result < beta) {
+                beta = result;
+            }
+        }
+
+        return beta;
     }
     
     private int nextHeroId(State state, int heroId) {
