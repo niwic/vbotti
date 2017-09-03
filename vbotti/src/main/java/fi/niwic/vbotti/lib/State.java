@@ -214,6 +214,7 @@ public class State {
     }
     
     private void fight(Hero hero, Hero opponent) {
+        //System.out.println(hero.getId() + " killed " + opponent.getId());
         opponent.setLife(opponent.getLife() - 20);
         if (opponent.isDead()) {
             opponent.die(board.getMines(), hero);
