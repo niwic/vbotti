@@ -13,3 +13,7 @@ Yhden peli-vuoron aikavaativuus koostuu pelikentän parsimistesta (R), reitinhau
 Algoritmin toimintaa kuvaa seuraava taulukko, jossa näkyy miten monta solmua on jouduttu tarkistamaan riippuen miten hyvin ollaan arvattu oikea siirto.
 
 ![Arvaus vs. Solmut](tarkistettutsolmut.png)
+
+Lähteet:
+- https://chessprogramming.wikispaces.com/Alpha-Beta
+- TIRA-kurssin materiaali
