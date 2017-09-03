@@ -5,6 +5,7 @@ Vindinium-botti
 - [Määrittely](dokumentaatio/määrittely.md)
 - [Toteutus](dokumentaatio/toteutus.md)
 - [Käyttöohje](dokumentaatio/käyttöohje.md)
+- [JavaDoc](dokumentaatio/apidocs/index.html)
 
 ## Viikkoraportit
 - [Viikko 1](dokumentaatio/viikkoraportti1.md)
