@@ -3,6 +3,9 @@ package fi.niwic.vbotti.lib;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.ArrayList;
 
+/**
+ * Pelaajaa kuvaava luokka.
+ */
 public class Hero extends HasPosition implements Tile  {
 
     private int id;
@@ -149,7 +152,7 @@ public class Hero extends HasPosition implements Tile  {
     /**
      * Suorittaa respawnlogiikan heron osalta.
      * 
-     * Siirtää pelaajan respawan paikkaan & asetetaan life sataan.
+     * Siirtää pelaajan respawan paikkaan &amp; asettaa life sataan.
      */
     public void respawn() {
         this.position = respawnPosition;

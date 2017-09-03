@@ -3,6 +3,9 @@ package fi.niwic.vbotti.lib;
 import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
+/**
+ * Mahdolliset siirrot pelikentällä.
+ */
 public enum Move {
     STAY(0), LEFT(1), RIGHT(2), UP(3), DOWN(4);
     

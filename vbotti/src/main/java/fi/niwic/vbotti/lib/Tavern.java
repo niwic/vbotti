@@ -2,6 +2,9 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 
+/**
+ * Pelikentän ruutu jossa taverna.
+ */
 class Tavern extends POI implements Tile {
     
     public Tavern(int boardSize, GameState.Position position) {

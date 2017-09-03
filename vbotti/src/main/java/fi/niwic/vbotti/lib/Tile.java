@@ -1,9 +1,7 @@
 package fi.niwic.vbotti.lib;
 
 /**
- * Pelikentän osa.
- * 
- * @author nic
+ * Pelikentän ruutu.
  */
 public interface Tile {
     

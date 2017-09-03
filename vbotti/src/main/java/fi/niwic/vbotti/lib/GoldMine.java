@@ -2,6 +2,9 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 
+/**
+ * Pelikentän ruutu jossa kultakaivos.
+ */
 public class GoldMine extends POI implements Tile {
 
     private int owner;

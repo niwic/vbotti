@@ -2,14 +2,17 @@ package fi.niwic.vbotti.bot;
 
 import fi.niwic.vbotti.lib.Move;
 
+/**
+ * Yhdistää siiroon ja etäsiyyden kiinnostavaan kohteeseen jotta voidaan
+ * järjestää siirrot niin, että lähin tulos kokeillaan ensin pelipuussa.
+ */
 public class MoveAndPOIDistance implements Comparable<MoveAndPOIDistance> {
 
     private Move move;
     private int distance;
 
     /**
-    * Yhdistää siiroon ja etäsiyyden kiinnostavaan kohteeseen jotta voidaan
-    * järjestää siirrot niin, että lähin tulos kokeillaan ensin pelipuussa.
+    * Luo uuden instanssin siirrolla ja etäisyydellä.
     * 
     * @param move siirto
     * @param distance etäisyys

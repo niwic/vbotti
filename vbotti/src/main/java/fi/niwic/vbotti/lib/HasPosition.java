@@ -2,6 +2,10 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 
+/**
+ * Rajapinta pelikentän ruudulle jolle tallennetaan lokaatio pelikentällä.
+ * @author nic
+ */
 public abstract class HasPosition {
 
     protected GameState.Position position;

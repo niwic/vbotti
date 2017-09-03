@@ -1,5 +1,8 @@
 package fi.niwic.util;
 
+/**
+ * Lisäysjärjestäminen ArrayList oliolle jonka jäsenet ovat verattavissa.
+ */
 public class InsertionSort {
 
     /**

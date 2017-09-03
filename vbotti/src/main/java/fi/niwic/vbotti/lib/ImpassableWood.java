@@ -1,5 +1,8 @@
 package fi.niwic.vbotti.lib;
 
+/**
+ * Pelikentän ruutu johon ei voi siirtyä.
+ */
 public class ImpassableWood implements Tile {
     
     @Override

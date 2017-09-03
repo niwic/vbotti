@@ -8,6 +8,9 @@ import com.google.api.client.http.GenericUrl;
 import fi.niwic.vbotti.bot.AlphaBetaBot;
 import java.security.InvalidParameterException;
 
+/**
+ * Main luokka joka käynnistää botin.
+ */
 public class Main {
 
     /**

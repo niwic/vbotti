@@ -1,5 +1,10 @@
 package fi.niwic.vbotti.lib;
 
+/**
+ * Osoitin kultakaivos listaan.
+ * 
+ * Käytetään pelikentän kopioinnin helpottamiseksi.
+ */
 class MinePointer implements Tile {
 
     int pos;

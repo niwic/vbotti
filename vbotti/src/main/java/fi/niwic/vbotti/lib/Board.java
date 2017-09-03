@@ -4,9 +4,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.ArrayList;
 
 /**
- * Pelikenttää ja tilannetta kuvaava luokka.
- * 
- * @author nic
+ * Pelikenttää kuvaava luokka.
  */
 public class Board {
     

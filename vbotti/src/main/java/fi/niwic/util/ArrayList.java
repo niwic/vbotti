@@ -9,6 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * Implementaatio listasta jossa käytetään taulukkoa tallennustilana.
+ * 
+ * @param <T> listaan tallennettavien olioiden tyyppi
+ */
 public class ArrayList<T> implements List<T> {
 
     private int size;

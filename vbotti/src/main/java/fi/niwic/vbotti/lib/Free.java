@@ -1,5 +1,8 @@
 package fi.niwic.vbotti.lib;
 
+/**
+ * Vapaa pelikentän ruutu.
+ */
 public class Free implements Tile {
     
     @Override

@@ -2,6 +2,9 @@ package fi.niwic.vbotti.lib;
 
 import com.brianstempin.vindiniumclient.dto.GameState;
 
+/**
+ * Rajapinta pelikentän ruuduille johon tiedetään etäisyys kaikista ruuduista.
+ */
 public interface HasDistance {
 
     /**

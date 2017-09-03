@@ -5,22 +5,25 @@ import fi.niwic.util.Queue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Reitinhaku algoritmi toteutettuna leveyssuuntaisena hakuna.
+ */
 public class PathFinder {
 
     private static Logger log = LogManager.getLogger(PathFinder.class);
     
     /**
      * Laskee reittien pituudet jokaisesta vapaasta paikasta jokaiseen
-     * kultakaivokseen.
+     * kiinnostavaan kohteeseen.
      * 
      * Algoritmi on breadth-first-search (BFS) tyyppinen ja käyttää apunaan
      * jonoa. Jonon tilavaativuus on O(N) jossa n on pelikentän kaikki ruudut.
      * Tämä on myös BFS algoritmin tilavaativuus.
      * 
-     * BFS algoritmin aikiavaativuus pahimmassa tapauksessa on myös O(R) missä
-     * R on kaikki pelikentän ruudut. Se suoritetaan pelikentän vapaille
-     * ruuduille, joita on pahimmassa tapauksessa kaikki, eli algoritmin
-     * kokonaisaikavaativuus on O(R^2).
+     * BFS algoritmin aikiavaativuus pahimmassa tapauksessa on O(R + S) missä
+     * R on kaikki pelikentän ruudut, ja S kaikki mahdolliset siirrot. Se
+     * suoritetaan pelikentän vapaille ruuduille, joita on pahimmassa
+     * tapauksessa kaikki, eli algoritmin kokonaisaikavaativuus on O(R*(R+S)).
      * 
      * @param board pelikenttä joka parsitaan
      */

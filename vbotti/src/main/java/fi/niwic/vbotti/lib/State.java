@@ -4,9 +4,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 import fi.niwic.util.ArrayList;
 
 /**
- * Ote pelitilanteesta mistä pystyy hakemaan myös pelitilanteen mutaatioita.
- * 
- * @author nic
+ * Ote pelitilanteesta mistä pystyy luomaan myös pelitilanteen mutaatioita.
  */
 public class State {
 

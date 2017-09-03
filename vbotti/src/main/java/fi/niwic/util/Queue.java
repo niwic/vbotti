@@ -1,5 +1,10 @@
 package fi.niwic.util;
 
+/**
+ * Jono implementaatio jossa tallennus on toteutettu taulukolla.
+ * 
+ * @param <T> jonoon tallennettavien olioiden tyyppi
+ */
 public class Queue<T> {
 
     private Object[] storage;

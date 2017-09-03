@@ -12,6 +12,13 @@ import fi.niwic.vbotti.lib.Hero;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Botin implementaatio.
+ * 
+ * Alustana käytetään SimpleBot rajapinta Brian Stempinin vindinium klientistä.
+ * 
+ * https://github.com/bstempi/vindinium-client
+ */
 public class AlphaBetaBot implements SimpleBot {
 
     private Logger log = LogManager.getLogger(AlphaBetaBot.class);
